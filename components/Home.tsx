@@ -1,19 +1,17 @@
-
-import React, { useEffect, useRef, useState } from 'react';
-import { PageView, Product, PRODUCTS } from '../data';
+import React, { useEffect, useRef } from 'react';
+import { useStore } from '../store';
+import { PRODUCTS } from '../data';
 import { Icons, RevealOnScroll } from './ui';
 import { ProductCard } from './Product';
 
-export const Hero = ({ onNavigate }: { onNavigate: (view: PageView) => void }) => {
+export const Hero = () => {
+  const { setView } = useStore();
   const imgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
         if (imgRef.current) {
             const scrolled = window.scrollY;
-            // Use simple transform for 60fps performance without re-renders
-            // TranslateY creates the parallax (slower scroll speed)
-            // Scale ensures image covers area even when translated
             imgRef.current.style.transform = `translate3d(0, ${scrolled * 0.4}px, 0) scale(1.1)`;
         }
     };
@@ -23,7 +21,7 @@ export const Hero = ({ onNavigate }: { onNavigate: (view: PageView) => void }) =
   }, []);
 
   return (
-    <section className="relative w-full h-screen overflow-hidden group cursor-pointer bg-black" onClick={() => onNavigate('collections')}>
+    <section className="relative w-full h-screen overflow-hidden group cursor-pointer bg-black" onClick={() => { setView('collections'); window.scrollTo(0, 0); }}>
         {/* Full Screen Image with Optimized Parallax */}
         <div className="absolute inset-0 overflow-hidden will-change-transform">
             <img 
@@ -80,13 +78,15 @@ const Manifesto = () => (
     </section>
 );
 
-const CuratedGrid = ({ products, onProductClick, onNavigate, onCategorySelect }: { products: Product[], onProductClick: (p: Product) => void, onNavigate: (view: PageView) => void, onCategorySelect: (category: string) => void }) => {
+const CuratedGrid = () => {
+    const { setView, setSelectedCategory, setActiveProduct } = useStore();
     // Balanced 3-column layout: Text + Product + Product
-    const displayProducts = products.slice(0, 2); 
+    const displayProducts = PRODUCTS.slice(0, 2); 
 
     const handleShopKnitwear = () => {
-        onCategorySelect('KNITWEAR');
-        onNavigate('collections');
+        setSelectedCategory('KNITWEAR');
+        setView('collections');
+        window.scrollTo(0, 0);
     };
 
     return (
@@ -100,104 +100,109 @@ const CuratedGrid = ({ products, onProductClick, onNavigate, onCategorySelect }:
                         A study in texture and form.
                      </p>
                      <button 
-                        className="text-[10px] font-bold uppercase tracking-widest border-b border-black pb-1 hover:text-gray-500 transition-colors"
                         onClick={handleShopKnitwear}
+                        className="text-[10px] font-bold uppercase tracking-widest border-b border-black pb-1 hover:opacity-50 transition-opacity"
                      >
                         Shop Knitwear
                      </button>
                 </div>
 
-                {/* Products */}
-                {displayProducts.map(p => (
-                    <div key={p.id} className="group cursor-pointer relative h-full min-h-[450px] overflow-hidden" onClick={() => onProductClick(p)}>
-                        <img src={p.image} className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105" alt={p.name} />
-                        
-                        {/* Overlay Content */}
-                        <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-black/50 to-transparent text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col items-start justify-end h-1/2">
-                            <h4 className="font-serif text-3xl italic">{p.name}</h4>
-                            <p className="text-sm font-medium mt-2">${p.price}</p>
-                            <span className="mt-4 text-[10px] font-bold uppercase tracking-widest border-b border-white pb-1">View Product</span>
+                {/* Product 1 */}
+                <div className="bg-white">
+                    <ProductCard 
+                        product={displayProducts[0]} 
+                        onClick={(p) => { setActiveProduct(p); setView('product'); window.scrollTo(0, 0); }} 
+                        isWishlisted={false}
+                        onToggleWishlist={() => {}} 
+                        showPrice={false}
+                    />
+                </div>
+
+                {/* Product 2 */}
+                <div className="bg-white">
+                    <ProductCard 
+                        product={displayProducts[1]} 
+                        onClick={(p) => { setActiveProduct(p); setView('product'); window.scrollTo(0, 0); }} 
+                        isWishlisted={false} 
+                        onToggleWishlist={() => {}}
+                        showPrice={false}
+                    />
+                </div>
+            </div>
+        </section>
+    );
+};
+
+const CategoryList = () => {
+    const { setView, setSelectedCategory } = useStore();
+    const categories = [
+        { name: 'Outerwear', id: 'OUTERWEAR', img: 'https://images.unsplash.com/photo-1544022613-e87a79a7835d?q=80&w=800' },
+        { name: 'Tailoring', id: 'TAILORING', img: 'https://images.unsplash.com/photo-1594932224828-b4b057b99cdd?q=80&w=800' },
+        { name: 'Footwear', id: 'FOOTWEAR', img: 'https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?q=80&w=800' },
+    ];
+
+    return (
+        <section className="bg-white border-b border-gray-200">
+            <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200">
+                {categories.map((cat) => (
+                    <div 
+                        key={cat.id}
+                        className="group relative h-[500px] overflow-hidden cursor-pointer"
+                        onClick={() => {
+                            setSelectedCategory(cat.id);
+                            setView('collections');
+                            window.scrollTo(0, 0);
+                        }}
+                    >
+                        <img src={cat.img} alt={cat.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-80" />
+                        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                            <h3 className="text-white text-4xl lg:text-5xl font-serif italic tracking-tighter transition-transform duration-700 group-hover:scale-110">{cat.name}</h3>
+                        </div>
+                        <div className="absolute bottom-10 left-10 overflow-hidden">
+                             <span className="text-white text-[10px] font-bold uppercase tracking-widest block translate-y-10 group-hover:translate-y-0 transition-transform duration-500">
+                                Explore Collection
+                             </span>
                         </div>
                     </div>
                 ))}
             </div>
         </section>
     );
-}
+};
 
-const CategoryList = ({ onNavigate, onCategorySelect }: { onNavigate: (view: PageView) => void, onCategorySelect: (category: string) => void }) => {
-    const categories = [
-        { name: "Outerwear", key: "OUTERWEAR" },
-        { name: "Tailoring", key: "TAILORING" },
-        { name: "Knitwear", key: "KNITWEAR" },
-        { name: "Leather Goods", key: "LEATHER GOODS" },
-        { name: "Footwear", key: "FOOTWEAR" },
-        { name: "Fragrance", key: "FRAGRANCE" },
-    ];
-
-    const handleCategoryClick = (categoryKey: string) => {
-        onCategorySelect(categoryKey);
-        onNavigate('collections');
-    };
+const ShopNewAndNow = () => {
+    const { setView, setActiveProduct, wishlist, toggleWishlist } = useStore();
+    const scrollRef = useRef<HTMLDivElement>(null);
 
     return (
-        <section className="py-24 border-b border-gray-200 bg-white">
-            <div className="max-w-[1920px] mx-auto px-6 md:px-12">
-                <div className="mb-12">
-                     <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">(03) — Departments</span>
+        <section className="py-24 bg-white overflow-hidden border-b border-gray-200">
+             <div className="max-w-[1920px] mx-auto px-6 md:px-12 mb-16 flex justify-between items-end">
+                <div>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block mb-4">(04) — New & Now</span>
+                    <h2 className="text-5xl font-serif italic leading-none">The Latest arrivals</h2>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-4">
-                    {categories.map((cat, idx) => {
-                        const count = PRODUCTS.filter(p => p.category === cat.key).length;
-                        return (
-                            <div 
-                                key={idx} 
-                                className="group cursor-pointer border-b border-gray-100 py-6 flex justify-between items-end hover:border-black transition-colors duration-300"
-                                onClick={() => handleCategoryClick(cat.key)}
-                            >
-                                <h3 className="text-3xl font-serif italic text-gray-300 group-hover:text-black transition-colors">{cat.name}</h3>
-                                <span className="text-xs font-bold text-gray-400 group-hover:text-black">({count})</span>
-                            </div>
-                        );
-                    })}
-                </div>
-            </div>
-        </section>
-    )
-}
+                <button onClick={() => { setView('collections'); window.scrollTo(0, 0); }} className="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 hover:opacity-50 transition-opacity">
+                    View All
+                </button>
+             </div>
 
-const ShopNewAndNow = ({ products, onProductClick, onNavigate }: { products: Product[], onProductClick: (p: Product) => void, onNavigate: (view: PageView) => void }) => {
-    // Show all products in a horizontal scrollable list
-    return (
-        <section className="py-24 bg-white border-t border-gray-200 overflow-hidden">
-             <div className="max-w-[1920px] mx-auto pl-6 md:pl-12">
-                <div className="flex justify-between items-end mb-12 pr-6 md:pr-12">
-                    <h3 className="text-4xl md:text-5xl font-serif">Shop New & Now</h3>
-                    <div className="hidden md:flex gap-4">
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Scroll</span>
-                        <Icons.ArrowRight />
-                    </div>
-                </div>
-
-                {/* Horizontal Scroll Container */}
-                <div className="flex overflow-x-auto gap-4 md:gap-8 pb-12 pr-6 md:pr-12 snap-x snap-mandatory scrollbar-hide cursor-grab active:cursor-grabbing">
-                    {products.map(p => (
-                        <div key={p.id} className="min-w-[220px] md:min-w-[260px] snap-start group cursor-pointer flex flex-col" onClick={() => onProductClick(p)}>
-                             <div className="bg-[#F3F3F3] aspect-[4/5] relative overflow-hidden mb-6">
-                                  <img src={p.image} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105" alt={p.name} />
-                                  <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                      <button className="bg-white p-2 rounded-full hover:bg-black hover:text-white transition-colors">
-                                          <Icons.Heart />
-                                      </button>
-                                  </div>
-                             </div>
-                             
-                             <div className="flex flex-col gap-1">
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">L'Homme</span>
-                                <h4 className="font-serif text-lg leading-tight">{p.name}</h4>
-                                <p className="text-sm font-medium mt-1">${p.price}</p>
-                                
-                                <button className="mt-4 w-full py-3 border border-gray-200 text-[10px] font-bold uppercase tracking-widest hover:bg-black hover:text-white hover:border-black transition-all duration-300">
+             <div className="relative group">
+                <div 
+                    ref={scrollRef}
+                    className="flex gap-4 overflow-x-auto scrollbar-hide px-6 md:px-12 snap-x snap-mandatory"
+                >
+                    {PRODUCTS.slice(4, 10).map((p) => (
+                        <div key={p.id} className="min-w-[300px] md:min-w-[450px] snap-start group/card relative">
+                             <ProductCard 
+                                product={p} 
+                                onClick={(p) => { setActiveProduct(p); setView('product'); window.scrollTo(0, 0); }} 
+                                isWishlisted={wishlist.includes(p.id)}
+                                onToggleWishlist={() => toggleWishlist(p.id)}
+                             />
+                             {/* Quick Add Overlay on Hover */}
+                             <div className="absolute bottom-24 right-4 translate-y-4 opacity-0 group-hover/card:translate-y-0 group-hover/card:opacity-100 transition-all duration-300">
+                                <button className="bg-white text-black text-[10px] font-bold uppercase tracking-widest px-6 py-3 shadow-xl hover:bg-black hover:text-white transition-colors">
                                     Buy Now
                                 </button>
                              </div>
@@ -206,7 +211,7 @@ const ShopNewAndNow = ({ products, onProductClick, onNavigate }: { products: Pro
                     {/* View All Card at end of scroll */}
                     <div 
                         className="min-w-[200px] snap-start flex items-center justify-center border border-gray-100 text-center cursor-pointer hover:bg-gray-50 transition-colors"
-                        onClick={() => onNavigate('collections')}
+                        onClick={() => { setView('collections'); window.scrollTo(0, 0); }}
                     >
                         <div className="p-8">
                              <p className="font-serif italic text-2xl mb-2">View All</p>
@@ -219,10 +224,12 @@ const ShopNewAndNow = ({ products, onProductClick, onNavigate }: { products: Pro
     )
 }
 
-const TheJournal = ({ onNavigate }: { onNavigate: (view: PageView) => void }) => (
+const TheJournal = () => {
+    const { setView } = useStore();
+    return (
     <section className="border-t border-b border-gray-200 bg-white">
         <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-gray-200">
-             <div className="group relative h-[600px] lg:h-[700px] overflow-hidden cursor-pointer" onClick={() => onNavigate('journal')}>
+             <div className="group relative h-[600px] lg:h-[700px] overflow-hidden cursor-pointer" onClick={() => { setView('journal'); window.scrollTo(0, 0); }}>
                 <img 
                     src="/items/CraftingSilence.jpeg" 
                     alt="Atelier" 
@@ -242,7 +249,7 @@ const TheJournal = ({ onNavigate }: { onNavigate: (view: PageView) => void }) =>
              </div>
 
              <div className="flex flex-col divide-y divide-gray-200">
-                 <div className="flex-1 p-12 flex flex-col justify-center bg-white hover:bg-gray-50 transition-colors cursor-pointer group" onClick={() => onNavigate('journal')}>
+                 <div className="flex-1 p-12 flex flex-col justify-center bg-white hover:bg-gray-50 transition-colors cursor-pointer group" onClick={() => { setView('journal'); window.scrollTo(0, 0); }}>
                      <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-4">Style</span>
                      <h4 className="text-3xl font-serif italic mb-6 group-hover:underline decoration-1 underline-offset-4">The Monochromatic Guide</h4>
                      <p className="text-gray-500 text-sm leading-relaxed mb-8 max-w-sm">
@@ -251,7 +258,7 @@ const TheJournal = ({ onNavigate }: { onNavigate: (view: PageView) => void }) =>
                      <span className="text-[10px] font-bold uppercase tracking-widest border-b border-black pb-1 self-start">View Guide</span>
                  </div>
                  
-                 <div className="flex-1 relative overflow-hidden group cursor-pointer min-h-[350px]" onClick={() => onNavigate('stores')}>
+                 <div className="flex-1 relative overflow-hidden group cursor-pointer min-h-[350px]" onClick={() => { setView('locations'); window.scrollTo(0, 0); }}>
                       <img src="/items/atelier.jpeg" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Store" />
                       <div className="absolute inset-0 bg-black/20" />
                       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center text-white w-full px-8">
@@ -265,17 +272,18 @@ const TheJournal = ({ onNavigate }: { onNavigate: (view: PageView) => void }) =>
              </div>
         </div>
     </section>
-)
+    );
+};
 
-export const HomeView = ({ onNavigate, onProductClick, products, onCategorySelect }: { onNavigate: (view: PageView) => void, onProductClick: (p: Product) => void, products: Product[], onCategorySelect: (category: string) => void }) => {
+export const HomeView = () => {
     return (
         <div className="bg-brand-off-white">
-            <Hero onNavigate={onNavigate} />
+            <Hero />
             <Manifesto />
-            <CuratedGrid products={products} onProductClick={onProductClick} onNavigate={onNavigate} onCategorySelect={onCategorySelect} />
-            <CategoryList onNavigate={onNavigate} onCategorySelect={onCategorySelect} />
-            <ShopNewAndNow products={products} onProductClick={onProductClick} onNavigate={onNavigate} />
-            <TheJournal onNavigate={onNavigate} />
+            <CuratedGrid />
+            <CategoryList />
+            <ShopNewAndNow />
+            <TheJournal />
         </div>
     )
 }

@@ -1,14 +1,7 @@
-
 import React, { useState } from 'react';
-import { PRODUCTS, Product } from '../data';
+import { useStore } from '../store';
+import { PRODUCTS } from '../data';
 import { ProductCard } from './Product';
-
-interface ShopProps {
-  onProductClick: (product: Product) => void;
-  wishlist: number[];
-  onToggleWishlist: (id: number) => void;
-  initialCategory?: string;
-}
 
 const CATEGORIES = ["All", "Outerwear", "Knitwear", "Shirting", "Trousers", "Footwear", "Essentials", "Tailoring", "Leather Goods", "Fragrance", "Accessories"];
 
@@ -28,8 +21,9 @@ const normalizeCategoryName = (category: string): string => {
   return mapping[category.toUpperCase()] || category;
 };
 
-export const Shop = ({ onProductClick, wishlist, onToggleWishlist, initialCategory }: ShopProps) => {
-  const [activeCategory, setActiveCategory] = useState(initialCategory ? normalizeCategoryName(initialCategory) : "All");
+export const Shop = () => {
+  const { setView, setActiveProduct, wishlist, toggleWishlist, selectedCategory } = useStore();
+  const [activeCategory, setActiveCategory] = useState(selectedCategory ? normalizeCategoryName(selectedCategory) : "All");
 
   const filteredProducts = activeCategory === "All" 
     ? PRODUCTS 
@@ -88,10 +82,10 @@ export const Shop = ({ onProductClick, wishlist, onToggleWishlist, initialCatego
                    <ProductCard 
                       key={p.id} 
                       product={p} 
-                      onClick={onProductClick}
+                      onClick={(p) => { setActiveProduct(p); setView('product'); window.scrollTo(0, 0); }}
                       isWishlisted={wishlist.includes(p.id)}
-                      onToggleWishlist={() => onToggleWishlist(p.id)}
-                      className="h-full bg-white hover:z-10" // h-full ensures cards stretch to fill grid cell
+                      onToggleWishlist={() => toggleWishlist(p.id)}
+                      className="h-full bg-white hover:z-10"
                    />
                 ))}
                 {/* Filler divs to keep grid neat if odd number of items */}

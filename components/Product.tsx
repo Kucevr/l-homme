@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Product, PRODUCTS, PageView } from '../data';
 import { PRODUCT_DETAILS } from '../data-extended';
 import { Icons } from './ui';
+import { useStore } from '../store';
 
 interface ProductCardProps {
     product: Product;
@@ -116,7 +119,8 @@ interface ProductDetailProps {
     recentlyViewed: Product[];
 }
 
-export const ProductDetail = ({ product, onAdd, onBack, onNavigate, onProductClick, recentlyViewed }: ProductDetailProps) => {
+export const ProductDetail = ({ product }: { product: Product }) => {
+  const { addToCart, setView, setActiveProduct, recentlyViewed } = useStore();
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
   
@@ -125,16 +129,37 @@ export const ProductDetail = ({ product, onAdd, onBack, onNavigate, onProductCli
   const completeTheLook = PRODUCTS.filter(p => completeTheLookIds.includes(p.id));
   const displayRecentlyViewed = recentlyViewed.filter(p => p.id !== product.id).slice(0, 4);
 
+  const jsonLd = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": product.name,
+    "image": [product.image, product.imageHover],
+    "description": details?.story || product.name,
+    "brand": { "@type": "Brand", "name": "L'HOMME" },
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "USD",
+      "price": product.price,
+      "availability": "https://schema.org/InStock"
+    }
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [product.id]);
 
   return (
     <>
-      <div className="min-h-screen bg-white animate-fade-in pt-16 md:pt-20">
+      <Helmet>
+        <title>{`${product.name} | L'HOMME`}</title>
+        <meta name="description" content={details?.story?.substring(0, 160) || product.name} />
+        <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
+      </Helmet>
+
+      <div className="min-h-screen bg-white pt-16 md:pt-20">
          {/* Back Button */}
          <div className="border-b border-gray-200 px-6 md:px-12 py-4">
-            <button onClick={onBack} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-black transition-colors">
+            <button onClick={() => setView('collections')} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-black transition-colors">
                 <Icons.ArrowRight className="rotate-180" />
                 Back to Collection
             </button>
@@ -185,7 +210,7 @@ export const ProductDetail = ({ product, onAdd, onBack, onNavigate, onProductCli
                     </div>
 
                     <button 
-                        onClick={() => selectedSize && onAdd(product, selectedSize)}
+                        onClick={() => selectedSize && addToCart(product, selectedSize)}
                         disabled={!selectedSize}
                         className={`w-full py-4 text-xs font-bold uppercase tracking-widest border border-black transition-all duration-300 ${selectedSize ? 'bg-black text-white hover:bg-white hover:text-black' : 'bg-gray-50 text-gray-300 border-gray-200 cursor-not-allowed'}`}
                     >
