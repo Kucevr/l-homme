@@ -23,7 +23,7 @@ export const Header = ({ cartCount, onOpenCart, onNavigate, onOpenSearch }: Head
 
   return (
     <>
-      <header className={`fixed top-0 left-0 w-full z-40 transition-all duration-500 border-b ${scrolled ? 'bg-white/95 backdrop-blur-md border-gray-100 py-4 text-black' : 'bg-transparent border-transparent py-8 text-black'}`}>
+      <header className={`fixed top-[30px] md:top-[34px] left-0 w-full z-40 transition-all duration-500 border-b ${scrolled ? 'bg-white/95 backdrop-blur-md border-gray-100 py-4 text-black' : 'bg-transparent border-transparent py-6 md:py-8 text-black'}`}>
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <button onClick={() => setIsMenuOpen(true)} className="flex items-center gap-3 hover:opacity-50 transition-opacity group">

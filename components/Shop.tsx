@@ -30,7 +30,7 @@ export const Shop = () => {
     : PRODUCTS.filter(p => normalizeCategoryName(p.category) === activeCategory);
 
   return (
-    <div className="min-h-screen bg-white pt-20">
+    <div className="min-h-screen bg-white pt-32 md:pt-40">
        <div className="flex flex-col lg:flex-row min-h-screen">
           
           {/* Sidebar Filters - Sticky on Desktop */}

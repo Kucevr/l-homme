@@ -47,7 +47,7 @@ export const Locations = () => {
   const activeLocation = LOCATIONS.find(l => l.city === activeCity) || LOCATIONS[0];
 
   return (
-    <div className="min-h-screen bg-white pt-20 animate-fade-in">
+    <div className="min-h-screen bg-white pt-32 md:pt-40 animate-fade-in">
       {/* Hero Section */}
       <section className="relative h-[60vh] overflow-hidden border-b border-gray-200">
         <img 

@@ -76,7 +76,7 @@ export const Journal = () => {
   const regularArticles = ARTICLES.filter(a => !a.featured);
 
   return (
-    <div className="min-h-screen bg-white pt-20 animate-fade-in">
+    <div className="min-h-screen bg-white pt-32 md:pt-40 animate-fade-in">
       {/* Hero */}
       <section className="border-b border-gray-200 py-16 md:py-24 bg-gray-50">
         <div className="max-w-[1920px] mx-auto px-6 md:px-12">

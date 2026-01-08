@@ -156,7 +156,7 @@ export const ProductDetail = ({ product }: { product: Product }) => {
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
 
-      <div className="min-h-screen bg-white pt-16 md:pt-20">
+      <div className="min-h-screen bg-white pt-32 md:pt-40">
          {/* Back Button */}
          <div className="border-b border-gray-200 px-6 md:px-12 py-4">
             <button onClick={() => setView('collections')} className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-black transition-colors">

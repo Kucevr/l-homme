@@ -39,7 +39,7 @@ const App = () => {
     <HelmetProvider>
       <div className="min-h-screen font-sans bg-white selection:bg-black selection:text-white">
         <Helmet>
-          <title>L\HOMME | Modern Atelier</title>
+          <title>L'HOMME | Modern Atelier</title>
           <meta name="description" content="Redefining the boundaries between formal tailoring and casual utility." />
         </Helmet>
 
@@ -76,7 +76,7 @@ const App = () => {
         <footer className="bg-black text-white border-t border-black">
           <div className="grid grid-cols-1 md:grid-cols-12 divide-y md:divide-y-0 md:divide-x divide-white/20 border-b border-white/20">
              <div className="col-span-1 md:col-span-5 p-8 md:p-16">
-                <h2 className="text-4xl md:text-6xl font-serif font-bold tracking-tighter mb-8 cursor-pointer hover:text-gray-300 transition-colors" onClick={() => handleNavigate("home")}>L\HOMME</h2>
+                <h2 className="text-4xl md:text-6xl font-serif font-bold tracking-tighter mb-8 cursor-pointer hover:text-gray-300 transition-colors" onClick={() => handleNavigate("home")}>L'HOMME</h2>
                 <p className="max-w-md text-gray-400 font-light leading-relaxed mb-12">
                    A modern atelier dedicated to the pursuit of silence in design. Crafted for the contemporary creative who values form, function, and longevity.
                 </p>

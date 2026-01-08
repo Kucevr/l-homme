@@ -72,7 +72,7 @@ export const RevealOnScroll = ({ children, className = "" }: { children?: React.
 };
 
 export const Marquee = () => (
-  <div className="bg-black text-white text-[10px] md:text-xs font-bold py-2 overflow-hidden flex items-center tracking-widest uppercase z-50 relative">
+  <div className="fixed top-0 left-0 w-full bg-black text-white text-[10px] md:text-xs font-bold py-2 overflow-hidden flex items-center tracking-widest uppercase z-[60]">
     <div className="animate-marquee whitespace-nowrap flex space-x-12">
       <span>Free Worldwide Shipping on orders over $250</span>
       <span>•</span>

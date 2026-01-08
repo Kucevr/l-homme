@@ -1,5 +1,5 @@
 
-export type PageView = 'home' | 'collections' | 'product' | 'journal' | 'stores';
+export type PageView = 'home' | 'collections' | 'product' | 'journal' | 'locations' | 'stores';
 export type CategoryType = 'All' | 'Outerwear' | 'Knitwear' | 'Shirting' | 'Trousers' | 'Footwear' | 'Essentials' | 'Tailoring' | 'Leather Goods' | 'Fragrance' | 'Accessories';
 
 export interface Product {
