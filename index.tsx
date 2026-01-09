@@ -46,6 +46,70 @@ const App = () => {
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+  // --- Dynamic URL Routing Logic ---
+  useEffect(() => {
+    const handleUrlChange = () => {
+      const path = window.location.pathname.replace('/', '');
+      const validViews: any = {
+        '': 'home',
+        'collections': 'collections',
+        'new-arrivals': 'new-arrivals',
+        'journal': 'journal',
+        'locations': 'locations',
+        'philosophy': 'philosophy',
+        'sustainability': 'sustainability',
+        'shipping': 'shipping',
+        'returns': 'returns',
+        'contact': 'contact',
+        'privacy': 'privacy',
+        'terms': 'terms'
+      };
+
+      if (validViews[path]) {
+        setView(validViews[path]);
+      } else if (path.startsWith('product/')) {
+        const productId = parseInt(path.split('/')[1]);
+        const product = PRODUCTS.find(p => p.id === productId);
+        if (product) {
+          setActiveProduct(product);
+          setView('product');
+        }
+      }
+    };
+
+    // Initial check
+    handleUrlChange();
+
+    // Listen for back/forward buttons
+    window.addEventListener('popstate', handleUrlChange);
+    return () => window.removeEventListener('popstate', handleUrlChange);
+  }, [setView, setActiveProduct]);
+
+  // Sync state to URL
+  useEffect(() => {
+    const pathMapping: any = {
+      'home': '/',
+      'collections': '/collections',
+      'new-arrivals': '/new-arrivals',
+      'journal': '/journal',
+      'locations': '/locations',
+      'philosophy': '/philosophy',
+      'sustainability': '/sustainability',
+      'shipping': '/shipping',
+      'returns': '/returns',
+      'contact': '/contact',
+      'privacy': '/privacy',
+      'terms': '/terms',
+      'product': activeProduct ? `/product/${activeProduct.id}` : '/'
+    };
+
+    const targetPath = pathMapping[view] || '/';
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState(null, '', targetPath);
+    }
+  }, [view, activeProduct]);
+  // ---------------------------------
+
   // Dynamic Scroll Atmosphere (Grain & Vignette)
   const { scrollY } = useScroll();
   const scrollVelocity = useVelocity(scrollY);
