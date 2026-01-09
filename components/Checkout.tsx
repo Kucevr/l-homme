@@ -149,7 +149,7 @@ export const Checkout: React.FC<CheckoutProps> = ({ onComplete, onBack }) => {
             <button
               disabled={isSubmitting}
               type="submit"
-              className="w-full bg-black text-white py-5 text-[10px] font-bold uppercase tracking-[0.2em] flex items-center justify-center gap-3 disabled:bg-gray-400"
+              className="w-full bg-black text-white py-5 text-[10px] font-bold uppercase tracking-[0.2em] border border-black hover:bg-white hover:text-black transition-all duration-300 flex items-center justify-center gap-3 disabled:bg-gray-400 disabled:border-gray-400"
             >
               {isSubmitting && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
               {isSubmitting ? (language === 'ru' ? 'Обработка...' : 'Processing...') : t.checkout.completeOrder}

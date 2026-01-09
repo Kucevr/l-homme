@@ -310,7 +310,7 @@ const App = () => {
                   <button 
                     onClick={handleCheckout}
                     disabled={cart.length === 0}
-                    className="w-full bg-black text-white py-4 text-xs font-bold uppercase tracking-widest disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                    className="w-full bg-black text-white py-4 text-xs font-bold uppercase tracking-widest border border-black hover:bg-white hover:text-black transition-all duration-300 disabled:bg-gray-400 disabled:border-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-3"
                   >
                     {t.cart.checkout}
                   </button>
