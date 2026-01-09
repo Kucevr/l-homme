@@ -108,7 +108,7 @@ export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: stri
         alt={alt}
         loading="lazy"
         onLoad={() => setIsLoaded(true)}
-        className={`w-full h-full object-cover transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        className={`w-full h-full object-cover transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
       />
     </div>
   );
@@ -250,7 +250,7 @@ export const RevealOnScroll: React.FC<RevealOnScrollProps> = ({ children, classN
   }, [delay]);
 
   return (
-    <div ref={ref} className={`transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'} ${className}`}>
+    <div ref={ref} className={`transition-all duration-700 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'} ${className}`}>
       {children}
     </div>
   );

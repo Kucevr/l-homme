@@ -92,38 +92,43 @@ export const Header = ({ cartCount, onOpenCart, onNavigate, onOpenSearch }: Head
         role="banner"
         className={`fixed ${scrolled ? 'top-0' : 'top-[16px]'} left-0 w-full z-40 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md border-b border-gray-100 py-4 shadow-sm' : 'bg-transparent border-transparent py-8 text-black'}`}
       >
-        <div className="max-w-[1920px] mx-auto px-6 md:px-12 flex items-center justify-between">
-          <div className="flex items-center">
+        <div className="max-w-[1920px] mx-auto px-4 md:px-12 flex items-center">
+          {/* Left Section */}
+          <div className="flex-1 flex items-center justify-start">
             <button 
               onClick={() => setIsMenuOpen(true)} 
               aria-label="Open menu"
-              className="flex items-center gap-3 hover:opacity-50 transition-opacity group focus:outline-none focus-visible:ring-2 focus-visible:ring-black px-2 py-1"
+              className="flex items-center gap-3 hover:opacity-50 transition-opacity group focus:outline-none focus-visible:ring-2 focus-visible:ring-black md:px-2 py-1"
             >
               <Icons.Menu />
-              <span className="hidden md:inline text-xs font-bold uppercase tracking-widest group-hover:underline">
+              <span className="hidden lg:inline text-xs font-bold uppercase tracking-widest group-hover:underline">
                 {translations[language].nav.menu}
               </span>
             </button>
-            <LanguageSwitcher />
+            <div className="hidden sm:block">
+              <LanguageSwitcher />
+            </div>
           </div>
 
-          <div className="absolute left-1/2 transform -translate-x-1/2">
+          {/* Center Section: Logo */}
+          <div className="flex-shrink-0 flex items-center justify-center">
             <button 
               aria-label="Go to home"
               onClick={() => onNavigate('home')} 
-              className="text-4xl md:text-5xl font-serif font-black tracking-tighter cursor-pointer hover:tracking-wide transition-all duration-500 focus:outline-none"
+              className="text-2xl sm:text-4xl md:text-5xl font-serif font-black tracking-tighter cursor-pointer hover:tracking-wide transition-all duration-500 focus:outline-none whitespace-nowrap"
             >
               L'HOMME
             </button>
           </div>
 
-          <div className="flex items-center space-x-6">
+          {/* Right Section */}
+          <div className="flex-1 flex items-center justify-end space-x-1 md:space-x-4">
             <button 
               onClick={() => setIsWishlistOpen(true)}
               aria-label={`View wishlist, ${wishlist.length} items`}
               className="hover:opacity-50 transition-opacity relative flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-black p-2"
             >
-              <span className="hidden md:inline text-xs font-bold uppercase tracking-widest">
+              <span className="hidden lg:inline text-xs font-bold uppercase tracking-widest">
                 {translations[language].nav.saved}
               </span>
               <motion.div animate={wishlistControls} className="relative">
@@ -149,9 +154,9 @@ export const Header = ({ cartCount, onOpenCart, onNavigate, onOpenSearch }: Head
             <button 
               onClick={onOpenCart} 
               aria-label={`View cart, ${cartCount} items`}
-              className="hover:opacity-50 transition-opacity relative flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-black p-2"
+              className="hover:opacity-50 transition-opacity relative flex items-center gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-black p-2"
             >
-              <span className="hidden md:inline text-xs font-bold uppercase tracking-widest">
+              <span className="hidden lg:inline text-xs font-bold uppercase tracking-widest">
                 {translations[language].nav.cart}
               </span>
               <motion.div animate={cartControls} className="relative">

@@ -20,7 +20,7 @@ const Sustainability = () => {
         {
             title: t.sections.ethical.title,
             content: t.sections.ethical.content,
-            image: "https://images.unsplash.com/photo-1558227691-41ea78d1f631?q=80&w=2574&auto=format&fit=crop"
+            image: "/items/Этичное производство.jpg"
         },
         {
             title: t.sections.innovation.title,

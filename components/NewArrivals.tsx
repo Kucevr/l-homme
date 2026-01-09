@@ -52,15 +52,16 @@ const NewArrivals = () => {
                 </div>
 
                 <div className="bg-gray-200 gap-px grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-y border-gray-200">
-                    {newArrivals.map((p) => (
-                        <ProductCard 
-                            key={p.id} 
-                            product={p} 
-                            onClick={(p) => { setActiveProduct(p); setView('product'); window.scrollTo(0, 0); }}
-                            isWishlisted={wishlist.includes(p.id)}
-                            onToggleWishlist={() => toggleWishlist(p.id)}
-                            className="bg-white"
-                        />
+                    {newArrivals.map((p, idx) => (
+                        <RevealOnScroll key={p.id} delay={idx * 50}>
+                            <ProductCard 
+                                product={p} 
+                                onClick={(p) => { setActiveProduct(p); setView('product'); window.scrollTo(0, 0); }}
+                                isWishlisted={wishlist.includes(p.id)}
+                                onToggleWishlist={() => toggleWishlist(p.id)}
+                                className="bg-white"
+                            />
+                        </RevealOnScroll>
                     ))}
                 </div>
 

@@ -149,9 +149,9 @@ const CategoryList = () => {
     const { setView, setSelectedCategory, language } = useStore();
     const t = translations[language];
     const categories = [
-        { name: language === 'ru' ? 'Верхняя одежда' : 'Outerwear', id: 'OUTERWEAR', img: 'https://images.unsplash.com/photo-1544022613-e87a79a7835d?q=80&w=800' },
-        { name: language === 'ru' ? 'Костюмы' : 'Tailoring', id: 'TAILORING', img: 'https://images.unsplash.com/photo-1594932224828-b4b057b99cdd?q=80&w=800' },
-        { name: language === 'ru' ? 'Обувь' : 'Footwear', id: 'FOOTWEAR', img: 'https://images.unsplash.com/photo-1614252235316-8c857d38b5f4?q=80&w=800' },
+        { name: language === 'ru' ? 'Верхняя одежда' : 'Outerwear', id: 'OUTERWEAR', img: '/items/верхняя одежда.jpg' },
+        { name: language === 'ru' ? 'Костюмы' : 'Tailoring', id: 'TAILORING', img: '/items/Костюмы.jpg' },
+        { name: language === 'ru' ? 'Обувь' : 'Footwear', id: 'FOOTWEAR', img: '/items/Обувь.jpg' },
     ];
 
     return (
@@ -213,7 +213,7 @@ const ShopNewAndNow = () => {
                     className="flex gap-4 overflow-x-auto overflow-y-hidden scrollbar-hide px-6 md:px-12 snap-x snap-mandatory pb-8"
                 >
                     {filteredProducts.map((p, index) => (
-                        <RevealOnScroll key={p.id} delay={index * 100} className="snap-start">
+                        <RevealOnScroll key={p.id} delay={index * 50} className="snap-start">
                             <div className="min-w-[300px] md:min-w-[450px] group/card relative">
                                 <ProductCard 
                                     product={p} 

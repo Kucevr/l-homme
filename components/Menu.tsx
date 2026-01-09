@@ -12,12 +12,34 @@ interface MenuProps {
 }
 
 const MENU_ITEMS = [
-  { label: 'Shop All', label_ru: 'Коллекции', view: 'collections', image: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?q=80&w=1000&auto=format&fit=crop' },
-  { label: 'New Arrivals', label_ru: 'Новинки', view: 'new-arrivals', image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1000&auto=format&fit=crop' },
-  { label: 'Editorial', label_ru: 'Журнал', view: 'journal', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2000&auto=format&fit=crop' },
-  { label: 'Philosophy', label_ru: 'Философия', view: 'philosophy', image: 'https://images.unsplash.com/photo-1534030347209-467a5b0ad3e6?q=80&w=1000&auto=format&fit=crop' },
-  { label: 'Sustainability', label_ru: 'Экологичность', view: 'sustainability', image: 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?q=80&w=1000&auto=format&fit=crop' },
+  { label: 'Shop All', label_ru: 'Коллекции', view: 'collections', image: '/items/коллекции.jpg' },
+  { label: 'New Arrivals', label_ru: 'Новинки', view: 'new-arrivals', image: '/items/коллекции 2.jpg' },
+  { label: 'Editorial', label_ru: 'Журнал', view: 'journal', image: '/items/журнал.jpg' },
+  { label: 'Philosophy', label_ru: 'Философия', view: 'philosophy', image: '/items/философия.jpg' },
+  { label: 'Sustainability', label_ru: 'Экологичность', view: 'sustainability', image: '/items/экологичность.jpg' },
 ];
+
+const LanguageSwitcher = () => {
+  const { language, setLanguage } = useStore();
+  
+  return (
+    <div className="flex items-center gap-4 border border-white/20 px-4 py-2 rounded-full">
+      <button 
+        onClick={() => setLanguage('en')}
+        className={`text-xs font-bold tracking-widest transition-colors ${language === 'en' ? 'text-white underline underline-offset-4' : 'text-gray-500 hover:text-white'}`}
+      >
+        ENGLISH
+      </button>
+      <span className="text-gray-700">/</span>
+      <button 
+        onClick={() => setLanguage('ru')}
+        className={`text-xs font-bold tracking-widest transition-colors ${language === 'ru' ? 'text-white underline underline-offset-4' : 'text-gray-500 hover:text-white'}`}
+      >
+        РУССКИЙ
+      </button>
+    </div>
+  );
+};
 
 export const FullScreenMenu = ({ isOpen, onClose, onNavigate }: MenuProps) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -69,7 +91,7 @@ export const FullScreenMenu = ({ isOpen, onClose, onNavigate }: MenuProps) => {
         </div>
       </div>
       
-      <div className="p-6 md:px-12 md:py-8 border-t border-white/10 flex justify-between items-center text-xs font-bold uppercase tracking-widest text-gray-400">
+      <div className="p-6 md:px-12 md:py-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-6 text-xs font-bold uppercase tracking-widest text-gray-400">
         <div className="flex gap-6">
           <button className="hover:text-white" onClick={() => { onNavigate('contact'); onClose(); }}>
             {translations[language].sections.contact}
@@ -78,6 +100,11 @@ export const FullScreenMenu = ({ isOpen, onClose, onNavigate }: MenuProps) => {
             {translations[language].nav.locations}
           </button>
         </div>
+        
+        <div className="md:absolute md:left-1/2 md:transform md:-translate-x-1/2">
+             <LanguageSwitcher />
+        </div>
+
         <div className="flex gap-6">
            <button className="hover:text-white" onClick={() => { onNavigate('privacy'); onClose(); }}>
             {translations[language].footer.privacy}

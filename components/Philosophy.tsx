@@ -27,7 +27,7 @@ const Philosophy = () => {
             <RevealOnScroll>
               <div className="relative aspect-[4/5] bg-stone-100 overflow-hidden group">
                 <img 
-                  src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=1200&auto=format&fit=crop" 
+                  src="/items/01 — СТРУКТУРАЛИЗМ.jpg" 
                   alt="Architectural structure" 
                   className="w-full h-full object-cover grayscale transition-transform duration-1000 group-hover:scale-105"
                 />
@@ -65,7 +65,7 @@ const Philosophy = () => {
                  <RevealOnScroll>
                     <div className="aspect-video bg-stone-100 overflow-hidden">
                        <img 
-                          src="https://images.unsplash.com/photo-1558226011-88f572455b76?q=80&w=1600&auto=format&fit=crop" 
+                          src="/items/02 — МАТЕРИАЛЬНОСТЬ.jpg" 
                           alt="Detailing" 
                           className="w-full h-full object-cover grayscale"
                        />

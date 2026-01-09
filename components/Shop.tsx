@@ -3,6 +3,7 @@ import { useStore } from '../store';
 import { PRODUCTS } from '../data';
 import { ProductCard } from './Product';
 import { translations } from '../translations';
+import { RevealOnScroll } from './ui';
 
 const CATEGORIES = [
   { id: 'ALL', en: 'All', ru: 'Все' },
@@ -87,12 +88,12 @@ const Shop = () => {
                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-black mb-6 border-b border-black pb-2">
                        {translations[language].shop.material}
                    </h4>
-                   <div className="flex flex-col gap-2">
+                   <div className="flex flex-row lg:flex-col gap-4 lg:gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 scrollbar-hide">
                       {materials.map(m => (
                         <button
                           key={m}
                           onClick={() => setActiveMaterial(m)}
-                          className={`text-left text-[10px] uppercase tracking-widest py-1 transition-colors ${activeMaterial === m ? 'text-black font-bold' : 'text-gray-400 hover:text-black'}`}
+                          className={`text-left text-[10px] uppercase tracking-widest py-1 transition-colors whitespace-nowrap ${activeMaterial === m ? 'text-black font-bold' : 'text-gray-400 hover:text-black'}`}
                         >
                           {m}
                         </button>
@@ -105,12 +106,12 @@ const Shop = () => {
                    <h4 className="text-[10px] font-black uppercase tracking-[0.2em] text-black mb-6 border-b border-black pb-2">
                        {translations[language].shop.silhouette}
                    </h4>
-                   <div className="flex flex-col gap-2">
+                   <div className="flex flex-row lg:flex-col gap-4 lg:gap-2 overflow-x-auto lg:overflow-visible pb-2 lg:pb-0 scrollbar-hide">
                       {silhouettes.map(s => (
                         <button
                           key={s}
                           onClick={() => setActiveSilhouette(s)}
-                          className={`text-left text-[10px] uppercase tracking-widest py-1 transition-colors ${activeSilhouette === s ? 'text-black font-bold' : 'text-gray-400 hover:text-black'}`}
+                          className={`text-left text-[10px] uppercase tracking-widest py-1 transition-colors whitespace-nowrap ${activeSilhouette === s ? 'text-black font-bold' : 'text-gray-400 hover:text-black'}`}
                         >
                           {s}
                         </button>
@@ -148,14 +149,15 @@ const Shop = () => {
              {/* Strict Grid - Uses gap-px for perfect borders */}
              <div className="bg-gray-200 gap-px grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 border-b border-gray-200">
                 {filteredProducts.map((p, idx) => (
-                   <ProductCard 
-                      key={p.id} 
-                      product={p} 
-                      onClick={(p) => { setActiveProduct(p); window.scrollTo(0, 0); }}
-                      isWishlisted={wishlist.includes(p.id)}
-                      onToggleWishlist={() => toggleWishlist(p.id)}
-                      className="h-full bg-white hover:z-10"
-                   />
+                   <RevealOnScroll key={p.id} delay={(idx % 3) * 50}>
+                      <ProductCard 
+                          product={p} 
+                          onClick={(p) => { setActiveProduct(p); window.scrollTo(0, 0); }}
+                          isWishlisted={wishlist.includes(p.id)}
+                          onToggleWishlist={() => toggleWishlist(p.id)}
+                          className="h-full bg-white hover:z-10"
+                      />
+                   </RevealOnScroll>
                 ))}
                 {/* Filler divs to keep grid neat if odd number of items */}
                 {[...Array(3 - (filteredProducts.length % 3))].map((_, i) => (
