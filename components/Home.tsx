@@ -46,7 +46,7 @@ export const Hero = () => {
         <div className="absolute bottom-20 left-6 md:bottom-32 md:left-24 text-white z-20 max-w-2xl">
             <RevealOnScroll>
                 <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.2em] mb-6 opacity-90 border-l-2 border-white pl-4">
-                    (01) — Autumn / Winter 24
+                    (01) — Autumn / Winter 26
                 </p>
                 <h2 className="text-6xl md:text-8xl lg:text-9xl font-serif italic mb-10 leading-[0.9]">
                     Silence <br/> in Motion

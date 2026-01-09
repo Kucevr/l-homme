@@ -20,7 +20,7 @@ const ARTICLES: Article[] = [
     category: "Atelier",
     excerpt: "On the importance of negative space, structure, and the pursuit of the perfect silhouette. An intimate look at the philosophy behind our tailoring.",
     image: "/items/CraftingSilence.jpeg",
-    date: "Dec 15, 2024",
+    date: "Dec 15, 2026",
     readTime: "8 min",
     featured: true
   },
@@ -30,7 +30,7 @@ const ARTICLES: Article[] = [
     category: "Style",
     excerpt: "Mastering the art of tonal dressing. How to layer textures within a single color palette for a sophisticated winter look.",
     image: "/items/ann3.jpeg",
-    date: "Dec 10, 2024",
+    date: "Dec 10, 2026",
     readTime: "5 min"
   },
   {
@@ -39,7 +39,7 @@ const ARTICLES: Article[] = [
     category: "Philosophy",
     excerpt: "Why we choose quality over quantity. A deep dive into sustainable practices and the true cost of fast fashion.",
     image: "/items/TheArtofSlowFashion.jpeg",
-    date: "Dec 5, 2024",
+    date: "Dec 5, 2026",
     readTime: "10 min"
   },
   {
