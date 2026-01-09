@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { Product, CartItem, PageView } from './data';
 
 interface AppState {
@@ -9,11 +9,15 @@ interface AppState {
   wishlist: number[];
   recentlyViewed: Product[];
   selectedCategory: string | undefined;
+  isCartOpen: boolean;
+  isWishlistOpen: boolean;
   
   // Actions
   setView: (view: PageView) => void;
   setActiveProduct: (product: Product | null) => void;
   setSelectedCategory: (category: string | undefined) => void;
+  setIsCartOpen: (isOpen: boolean) => void;
+  setIsWishlistOpen: (isOpen: boolean) => void;
   
   addToCart: (product: Product, size: string) => void;
   removeFromCart: (cartId: string) => void;
@@ -30,6 +34,8 @@ export const useStore = create<AppState>()(
       wishlist: [],
       recentlyViewed: [],
       selectedCategory: undefined,
+      isCartOpen: false,
+      isWishlistOpen: false,
 
       setView: (view) => set((state) => {
         if (view !== 'collections') {
@@ -50,6 +56,9 @@ export const useStore = create<AppState>()(
       }),
 
       setSelectedCategory: (category) => set({ selectedCategory: category }),
+
+      setIsCartOpen: (isOpen) => set({ isCartOpen: isOpen }),
+      setIsWishlistOpen: (isOpen) => set({ isWishlistOpen: isOpen }),
 
       addToCart: (product, size) => set((state) => {
         const existing = state.cart.find(item => item.id === product.id && item.selectedSize === size);
@@ -88,8 +97,13 @@ export const useStore = create<AppState>()(
       })),
     }),
     {
-      name: 'lhomme-storage',
-      partialize: (state) => ({ cart: state.cart, wishlist: state.wishlist, recentlyViewed: state.recentlyViewed }),
+      name: 'lhomme-user-storage-v1',
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({ 
+        cart: state.cart, 
+        wishlist: state.wishlist, 
+        recentlyViewed: state.recentlyViewed 
+      }),
     }
   )
 );

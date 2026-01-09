@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Icons, RevealOnScroll } from './ui';
+import { Icons, RevealOnScroll, LazyImage } from './ui';
 
 interface Location {
   city: string;
@@ -49,14 +49,14 @@ export const Locations = () => {
   return (
     <div className="min-h-screen bg-white pt-32 md:pt-40 animate-fade-in">
       {/* Hero Section */}
-      <section className="relative h-[60vh] overflow-hidden border-b border-gray-200">
-        <img 
+      <section className="relative h-[60vh] overflow-hidden border-b border-gray-200 bg-stone-100">
+        <LazyImage 
           src={activeLocation.image}
           alt={activeLocation.city}
-          className="absolute inset-0 w-full h-full object-cover transition-all duration-1000"
+          className="absolute inset-0 w-full h-full"
         />
         <div className="absolute inset-0 bg-black/30" />
-        <div className="absolute bottom-0 left-0 right-0 p-8 md:p-16 text-white">
+        <div className="absolute bottom-0 left-0 right-0 p-8 md:p-16 text-white z-10">
           <RevealOnScroll>
             <span className="text-[10px] font-bold uppercase tracking-widest mb-4 block opacity-90">Global Boutiques</span>
             <h1 className="text-6xl md:text-8xl font-serif italic leading-none mb-6">Visit Us</h1>
@@ -68,7 +68,7 @@ export const Locations = () => {
       </section>
 
       {/* City Selector */}
-      <div className="border-b border-gray-200 bg-white sticky top-20 z-10">
+      <div className="border-b border-gray-200 bg-white/80 backdrop-blur-md sticky top-[72px] md:top-[88px] z-30 transition-all duration-300">
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 py-6 flex gap-8 justify-center">
           {LOCATIONS.map(loc => (
             <button
@@ -88,13 +88,13 @@ export const Locations = () => {
 
       {/* Location Details */}
       <section className="max-w-[1920px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[600px]">
+        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[600px] bg-white">
           {/* Image */}
           <div className="relative h-[400px] lg:h-auto overflow-hidden group">
-            <img 
+            <LazyImage 
               src={activeLocation.image}
               alt={activeLocation.city}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              className="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105"
             />
           </div>
 

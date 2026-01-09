@@ -19,6 +19,20 @@ export interface CartItem extends Product {
   cartId: string;
 }
 
+export interface PageLink {
+  id: string;
+  title: string;
+  view: PageView;
+  description: string;
+}
+
+export const SEARCHABLE_PAGES: PageLink[] = [
+  { id: 'journal', title: 'The Journal', view: 'journal', description: 'Editorial stories on craft, style, and philosophy.' },
+  { id: 'locations', title: 'Visit Us', view: 'locations', description: 'Explore our ateliers in Paris, Tokyo, and New York.' },
+  { id: 'shipping', title: 'Shipping & Returns', view: 'home', description: 'Details on our worldwide shipping and return policy.' },
+  { id: 'philosophy', title: 'Atelier Philosophy', view: 'home', description: 'The core values behind L\'HOMME design.' },
+];
+
 export const PRODUCTS: Product[] = [
   {
     id: 1,

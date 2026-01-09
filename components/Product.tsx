@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Product, PRODUCTS, PageView } from '../data';
 import { PRODUCT_DETAILS } from '../data-extended';
-import { Icons } from './ui';
+import { Icons, LazyImage, CharRevealText } from './ui';
 import { useStore } from '../store';
 
 interface ProductCardProps {
@@ -12,24 +12,36 @@ interface ProductCardProps {
     isWishlisted?: boolean;
     onToggleWishlist?: () => void;
     className?: string;
+    showPrice?: boolean;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick, isWishlisted, onToggleWishlist, className = "" }) => {
-  const [isHovered, setIsHovered] = useState(false);
-
+export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick, isWishlisted, onToggleWishlist, className = "", showPrice = true }) => {
   return (
     <div 
         className={`group cursor-pointer flex flex-col relative bg-white ${className}`}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
         onClick={() => onClick(product)}
     >
-      <div className="relative w-full aspect-[3/4] overflow-hidden bg-gray-100">
-        <img 
-          src={isHovered ? product.imageHover : product.image} 
-          alt={product.name} 
-          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-        />
+      <div className="relative w-full aspect-[3/4] overflow-hidden bg-stone-50">
+        {/* Base Image */}
+        <motion.div 
+            layoutId={`product-image-${product.id}`}
+            className="w-full h-full"
+        >
+            <LazyImage 
+            src={product.image} 
+            alt={product.name} 
+            className="w-full h-full transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+        </motion.div>
+        
+        {/* Hover Image */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+            <LazyImage 
+              src={product.imageHover} 
+              alt={product.name} 
+              className="w-full h-full transition-transform duration-700 ease-out group-hover:scale-105"
+            />
+        </div>
         
         {onToggleWishlist && (
             <button 
@@ -45,7 +57,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick, isWi
         <div>
             <div className="flex justify-between items-baseline mb-1">
                 <h3 className="text-sm font-sans font-medium text-black group-hover:underline decoration-1 underline-offset-4 truncate pr-4">{product.name}</h3>
-                <span className="text-xs font-bold shrink-0">${product.price}</span>
+                {showPrice && <span className="text-xs font-bold shrink-0">${product.price}</span>}
             </div>
             <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{product.category}</p>
         </div>
@@ -120,14 +132,26 @@ interface ProductDetailProps {
 }
 
 export const ProductDetail = ({ product }: { product: Product }) => {
-  const { addToCart, setView, setActiveProduct, recentlyViewed } = useStore();
+  const { addToCart, setView, setActiveProduct, recentlyViewed, setIsCartOpen, toggleWishlist, wishlist } = useStore();
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const isWishlisted = wishlist.includes(product.id);
   const [showSizeGuide, setShowSizeGuide] = useState(false);
+  const [showSticky, setShowSticky] = useState(false);
   
   const details = PRODUCT_DETAILS[product.id];
   const completeTheLookIds = details?.completeTheLook || [];
   const completeTheLook = PRODUCTS.filter(p => completeTheLookIds.includes(p.id));
-  const displayRecentlyViewed = recentlyViewed.filter(p => p.id !== product.id).slice(0, 4);
+  const displayRecentlyViewed = (recentlyViewed || []).filter(p => p && p.id !== product.id).slice(0, 4);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }
+  };
 
   const jsonLd = {
     "@context": "https://schema.org/",
@@ -146,7 +170,27 @@ export const ProductDetail = ({ product }: { product: Product }) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [product.id]);
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (showSizeGuide) setShowSizeGuide(false);
+        else setView('collections');
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Sticky CTA logic
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setShowSticky(scrollY > 1000); // Show after some scroll on mobile
+    };
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [product.id, showSizeGuide, setView]);
 
   return (
     <>
@@ -155,6 +199,36 @@ export const ProductDetail = ({ product }: { product: Product }) => {
         <meta name="description" content={details?.story?.substring(0, 160) || product.name} />
         <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
       </Helmet>
+
+      {/* Sticky Mobile CTA */}
+      <AnimatePresence>
+        {showSticky && (
+          <motion.div 
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
+            exit={{ y: 100 }}
+            className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/80 backdrop-blur-md border-t border-gray-200 p-4 flex items-center gap-4 shadow-[0_-10px_30px_rgba(0,0,0,0.05)]"
+          >
+            <div className="flex-1">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">{product.name}</p>
+              <p className="text-sm font-serif">${product.price}</p>
+            </div>
+            <button 
+              onClick={() => {
+                const el = document.getElementById('size-selector');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                else if (selectedSize) {
+                    addToCart(product, selectedSize);
+                    setIsCartOpen(true);
+                }
+              }}
+              className="bg-black text-white px-8 py-3 text-[10px] font-bold uppercase tracking-widest"
+            >
+              {selectedSize ? 'Add to Bag' : 'Select Size'}
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       <div className="min-h-screen bg-white pt-32 md:pt-40">
          {/* Back Button */}
@@ -168,30 +242,38 @@ export const ProductDetail = ({ product }: { product: Product }) => {
          <div className="grid grid-cols-1 lg:grid-cols-12 min-h-screen border-t border-gray-200">
              <div className="lg:col-span-8 bg-white border-b lg:border-b-0 lg:border-r border-gray-200">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-200">
+                    <motion.div 
+                        layoutId={`product-image-${product.id}`}
+                        className="bg-white aspect-[3/4] relative overflow-hidden group"
+                    >
+                        <LazyImage src={product.image} className="absolute inset-0 w-full h-full transition-transform duration-[2s] group-hover:scale-105" alt={product.name} />
+                    </motion.div>
                     <div className="bg-white aspect-[3/4] relative overflow-hidden group">
-                        <img src={product.image} className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105" alt={product.name} />
-                    </div>
-                    <div className="bg-white aspect-[3/4] relative overflow-hidden group">
-                        <img src={product.imageHover} className="absolute inset-0 w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105" alt={product.name} />
+                        <LazyImage src={product.imageHover} className="absolute inset-0 w-full h-full transition-transform duration-[2s] group-hover:scale-105" alt={product.name} />
                     </div>
                     <div className="bg-white aspect-[3/4] relative overflow-hidden group md:col-span-2">
-                        <img src={product.image} className="absolute inset-0 w-full h-full object-cover object-top scale-110 transition-transform duration-[2s] group-hover:scale-100" alt={product.name} />
+                        <LazyImage src={product.image} className="absolute inset-0 w-full h-full object-top scale-110 transition-transform duration-[2s] group-hover:scale-100" alt={product.name} />
                     </div>
                 </div>
              </div>
 
              <div className="lg:col-span-4 relative bg-white">
-                <div className="lg:sticky lg:top-20 p-8 md:p-10 h-fit flex flex-col gap-8">
-                    <div>
+                <motion.div 
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="lg:sticky lg:top-20 p-8 md:p-10 h-fit flex flex-col gap-8"
+                >
+                    <motion.div variants={itemVariants}>
                         <div className="flex justify-between items-start mb-4">
                             <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 border border-gray-200 px-2 py-1">{product.category}</span>
                             <span className="text-xl font-serif">${product.price}</span>
                         </div>
                         <h1 className="text-4xl font-serif italic leading-tight mb-6">{product.name}</h1>
                         <p className="text-sm text-gray-600 font-light leading-relaxed">{product.description}</p>
-                    </div>
+                    </motion.div>
 
-                    <div>
+                    <motion.div variants={itemVariants} id="size-selector">
                         <div className="flex justify-between items-center mb-3">
                             <span className="text-xs font-bold uppercase tracking-widest">Select Size</span>
                             <button onClick={() => setShowSizeGuide(true)} className="text-[10px] text-gray-400 underline hover:text-black">Size Guide</button>
@@ -207,17 +289,34 @@ export const ProductDetail = ({ product }: { product: Product }) => {
                                 </button>
                             ))}
                         </div>
-                    </div>
+                    </motion.div>
 
-                    <button 
-                        onClick={() => selectedSize && addToCart(product, selectedSize)}
-                        disabled={!selectedSize}
-                        className={`w-full py-4 text-xs font-bold uppercase tracking-widest border border-black transition-all duration-300 ${selectedSize ? 'bg-black text-white hover:bg-white hover:text-black' : 'bg-gray-50 text-gray-300 border-gray-200 cursor-not-allowed'}`}
-                    >
-                        {selectedSize ? 'Add to Bag' : 'Select Size'}
-                    </button>
+                    <motion.div variants={itemVariants} className="flex gap-4">
+                        <motion.button 
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => {
+                                if (selectedSize) {
+                                    addToCart(product, selectedSize);
+                                    setIsCartOpen(true);
+                                }
+                            }}
+                            disabled={!selectedSize}
+                            className={`flex-1 py-4 text-xs font-bold uppercase tracking-widest border border-black transition-all duration-300 ${selectedSize ? 'bg-black text-white hover:bg-white hover:text-black' : 'bg-gray-50 text-gray-300 border-gray-200 cursor-not-allowed'}`}
+                        >
+                            {selectedSize ? 'Add to Bag' : 'Select Size'}
+                        </motion.button>
+                        <motion.button
+                            whileHover={{ scale: 1.05, backgroundColor: "#f9f9f9" }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => toggleWishlist(product.id)}
+                            className={`w-14 h-14 flex items-center justify-center border border-black transition-colors ${isWishlisted ? 'bg-black text-white hover:bg-black/90' : 'bg-white text-black hover:bg-gray-50'}`}
+                        >
+                            {isWishlisted ? <Icons.HeartFill /> : <Icons.Heart />}
+                        </motion.button>
+                    </motion.div>
 
-                    <div className="pt-4">
+                    <motion.div variants={itemVariants} className="pt-4">
                         <Accordion title="Details & Fit" defaultOpen={true}>
                             <p className="mb-3"><strong>Fit:</strong> {details?.fit}</p>
                             <p className="mb-3"><strong>Made in:</strong> {details?.madeIn}</p>
@@ -249,17 +348,49 @@ export const ProductDetail = ({ product }: { product: Product }) => {
                             Returns accepted within 14 days of delivery.<br/>
                             All items are final sale after 30 days.
                         </Accordion>
-                    </div>
-                </div>
+                    </motion.div>
+                </motion.div>
              </div>
          </div>
          
+         {details?.craft && (
+            <div className="border-t border-gray-200 py-24 px-6 md:px-12 bg-stone-50 overflow-hidden">
+                <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div className="relative aspect-square md:aspect-video lg:aspect-square overflow-hidden bg-gray-200 order-2 lg:order-1">
+                        <LazyImage 
+                            src={details.craft.image} 
+                            alt={details.craft.title} 
+                            className="w-full h-full"
+                        />
+                        <div className="absolute inset-0 bg-black/5"></div>
+                    </div>
+                    <div className="flex flex-col gap-8 order-1 lg:order-2">
+                        <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400">— Behind the craft</span>
+                        <h3 className="text-4xl md:text-5xl font-serif italic leading-tight">{details.craft.title}</h3>
+                        <CharRevealText 
+                            text={details.craft.description}
+                            className="text-lg md:text-xl font-light leading-relaxed text-gray-700"
+                        />
+                        <div className="pt-4">
+                            <button className="text-[10px] font-bold uppercase tracking-widest border-b border-black pb-1 hover:opacity-50 transition-opacity">
+                                Explore Our Atelier
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         )}
+
          {completeTheLook.length > 0 && (
             <div className="border-t border-gray-200 py-16 px-6 md:px-12">
                 <h3 className="text-2xl font-serif italic mb-8 text-center">Complete The Look</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     {completeTheLook.map(p => (
-                        <ProductCard key={p.id} product={p} onClick={onProductClick} />
+                        <ProductCard 
+                            key={p.id} 
+                            product={p} 
+                            onClick={(product) => { setActiveProduct(product); window.scrollTo(0, 0); }} 
+                        />
                     ))}
                 </div>
             </div>
@@ -270,7 +401,12 @@ export const ProductDetail = ({ product }: { product: Product }) => {
                 <h3 className="text-xl font-serif italic mb-8 text-center text-gray-500">Recently Viewed</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
                     {displayRecentlyViewed.map(p => (
-                        <ProductCard key={p.id} product={p} onClick={onProductClick} className="bg-transparent" />
+                        <ProductCard 
+                            key={p.id} 
+                            product={p} 
+                            onClick={(product) => { setActiveProduct(product); window.scrollTo(0, 0); }} 
+                            className="bg-transparent" 
+                        />
                     ))}
                 </div>
             </div>

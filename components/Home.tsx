@@ -1,37 +1,43 @@
 import React, { useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useStore } from '../store';
 import { PRODUCTS } from '../data';
-import { Icons, RevealOnScroll } from './ui';
+import { Icons, RevealOnScroll, LazyImage, RevealText, CharRevealText } from './ui';
 import { ProductCard } from './Product';
 
 export const Hero = () => {
   const { setView } = useStore();
-  const imgRef = useRef<HTMLImageElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
+  
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start start", "end start"]
+  });
 
-  useEffect(() => {
-    const handleScroll = () => {
-        if (imgRef.current) {
-            const scrolled = window.scrollY;
-            imgRef.current.style.transform = `translate3d(0, ${scrolled * 0.4}px, 0) scale(1.1)`;
-        }
-    };
-    
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const springConfig = { damping: 30, stiffness: 200, restDelta: 0.001 };
+  
+  // High-end smooth parallax values
+  const y = useSpring(useTransform(scrollYProgress, [0, 1], [0, 300]), springConfig);
+  const scale = useSpring(useTransform(scrollYProgress, [0, 1], [1.1, 1.3]), springConfig);
+  const opacity = useTransform(scrollYProgress, [0, 0.8], [0.9, 0.4]);
 
   return (
-    <section className="relative w-full h-screen overflow-hidden group cursor-pointer bg-black" onClick={() => { setView('collections'); window.scrollTo(0, 0); }}>
-        {/* Full Screen Image with Optimized Parallax */}
-        <div className="absolute inset-0 overflow-hidden will-change-transform">
+    <section 
+        ref={sectionRef}
+        className="relative w-full h-screen overflow-hidden group cursor-pointer bg-black" 
+        onClick={() => { setView('collections'); window.scrollTo(0, 0); }}
+    >
+        {/* Full Screen Image with Cinematic Spring Parallax */}
+        <motion.div 
+            style={{ y, scale, opacity }}
+            className="absolute inset-0 w-full h-full will-change-transform"
+        >
             <img 
-                ref={imgRef}
                 src="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?q=80&w=2000&auto=format&fit=crop" 
                 alt="L'HOMME Autumn/Winter 24 Campaign - Modern Tailoring" 
-                className="absolute inset-0 w-full h-[120%] object-cover opacity-90 transition-transform duration-75 ease-out origin-top"
-                style={{ transform: 'scale(1.1)' }}
+                className="w-full h-full object-cover origin-center"
             />
-        </div>
+        </motion.div>
         
         {/* Cinematic Overlay Gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
@@ -61,25 +67,18 @@ export const Hero = () => {
 
 const Manifesto = () => (
     <section className="py-24 md:py-40 border-b border-gray-200 bg-brand-off-white">
-        <div className="max-w-[1920px] mx-auto px-6 md:px-12 grid grid-cols-1 md:grid-cols-12 gap-12">
-            <div className="md:col-span-2 hidden md:block">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">(02) — Philosophy</span>
-            </div>
-            <div className="md:col-span-8">
-                <RevealOnScroll>
-                    <h2 className="text-3xl md:text-5xl lg:text-6xl font-serif leading-[1.1] md:leading-[1.1]">
-                        We believe in <span className="italic text-gray-400">fewer, better things</span>. 
-                        Design that respects the wearer. Materials that age with grace. 
-                        A wardrobe that acts as a quiet foundation for a loud world.
-                    </h2>
-                </RevealOnScroll>
-            </div>
+        <div className="max-w-[1920px] mx-auto px-6 md:px-12 flex flex-col items-center">
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-gray-400 mb-12">(02) — Philosophy</span>
+            <CharRevealText 
+                text="We believe in fewer, better things. Design that respects the wearer. Materials that age with grace. A wardrobe that acts as a quiet foundation for a loud world."
+                className="text-3xl md:text-5xl lg:text-7xl font-light tracking-tight text-center max-w-5xl leading-[1.1] font-serif italic"
+            />
         </div>
     </section>
 );
 
 const CuratedGrid = () => {
-    const { setView, setSelectedCategory, setActiveProduct } = useStore();
+    const { setView, setSelectedCategory, setActiveProduct, wishlist, toggleWishlist } = useStore();
     // Balanced 3-column layout: Text + Product + Product
     const displayProducts = PRODUCTS.slice(0, 2); 
 
@@ -112,8 +111,8 @@ const CuratedGrid = () => {
                     <ProductCard 
                         product={displayProducts[0]} 
                         onClick={(p) => { setActiveProduct(p); setView('product'); window.scrollTo(0, 0); }} 
-                        isWishlisted={false}
-                        onToggleWishlist={() => {}} 
+                        isWishlisted={wishlist.includes(displayProducts[0].id)}
+                        onToggleWishlist={() => toggleWishlist(displayProducts[0].id)} 
                         showPrice={false}
                     />
                 </div>
@@ -123,8 +122,8 @@ const CuratedGrid = () => {
                     <ProductCard 
                         product={displayProducts[1]} 
                         onClick={(p) => { setActiveProduct(p); setView('product'); window.scrollTo(0, 0); }} 
-                        isWishlisted={false} 
-                        onToggleWishlist={() => {}}
+                        isWishlisted={wishlist.includes(displayProducts[1].id)} 
+                        onToggleWishlist={() => toggleWishlist(displayProducts[1].id)}
                         showPrice={false}
                     />
                 </div>
@@ -154,7 +153,7 @@ const CategoryList = () => {
                             window.scrollTo(0, 0);
                         }}
                     >
-                        <img src={cat.img} alt={cat.name} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-80" />
+                        <LazyImage src={cat.img} alt={cat.name} className="absolute inset-0 w-full h-full transition-transform duration-1000 group-hover:scale-110 opacity-80" />
                         <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors" />
                         <div className="absolute inset-0 flex items-center justify-center">
                             <h3 className="text-white text-4xl lg:text-5xl font-serif italic tracking-tighter transition-transform duration-700 group-hover:scale-110">{cat.name}</h3>
@@ -172,8 +171,14 @@ const CategoryList = () => {
 };
 
 const ShopNewAndNow = () => {
-    const { setView, setActiveProduct, wishlist, toggleWishlist } = useStore();
+    const { setView, setActiveProduct, wishlist, toggleWishlist, addToCart, setIsCartOpen } = useStore();
     const scrollRef = useRef<HTMLDivElement>(null);
+
+    // Filter products that use images from /items/ first, then take up to 12
+    const filteredProducts = [
+        ...PRODUCTS.filter(p => p.image.startsWith('/items/')),
+        ...PRODUCTS.filter(p => !p.image.startsWith('/items/'))
+    ].slice(0, 12);
 
     return (
         <section className="py-24 bg-white overflow-hidden border-b border-gray-200">
@@ -187,26 +192,35 @@ const ShopNewAndNow = () => {
                 </button>
              </div>
 
-             <div className="relative group">
+             <div className="relative">
                 <div 
                     ref={scrollRef}
-                    className="flex gap-4 overflow-x-auto scrollbar-hide px-6 md:px-12 snap-x snap-mandatory"
+                    className="flex gap-4 overflow-x-auto overflow-y-hidden scrollbar-hide px-6 md:px-12 snap-x snap-mandatory pb-8"
                 >
-                    {PRODUCTS.slice(4, 10).map((p) => (
-                        <div key={p.id} className="min-w-[300px] md:min-w-[450px] snap-start group/card relative">
-                             <ProductCard 
-                                product={p} 
-                                onClick={(p) => { setActiveProduct(p); setView('product'); window.scrollTo(0, 0); }} 
-                                isWishlisted={wishlist.includes(p.id)}
-                                onToggleWishlist={() => toggleWishlist(p.id)}
-                             />
-                             {/* Quick Add Overlay on Hover */}
-                             <div className="absolute bottom-24 right-4 translate-y-4 opacity-0 group-hover/card:translate-y-0 group-hover/card:opacity-100 transition-all duration-300">
-                                <button className="bg-white text-black text-[10px] font-bold uppercase tracking-widest px-6 py-3 shadow-xl hover:bg-black hover:text-white transition-colors">
-                                    Buy Now
-                                </button>
-                             </div>
-                        </div>
+                    {filteredProducts.map((p, index) => (
+                        <RevealOnScroll key={p.id} delay={index * 100} className="snap-start">
+                            <div className="min-w-[300px] md:min-w-[450px] group/card relative">
+                                <ProductCard 
+                                    product={p} 
+                                    onClick={(p) => { setActiveProduct(p); setView('product'); window.scrollTo(0, 0); }} 
+                                    isWishlisted={wishlist.includes(p.id)}
+                                    onToggleWishlist={() => toggleWishlist(p.id)}
+                                />
+                                {/* Quick Add Overlay on Hover */}
+                                <div className="absolute bottom-24 right-4 translate-y-4 opacity-0 group-hover/card:translate-y-0 group-hover/card:opacity-100 transition-all duration-300">
+                                    <button 
+                                        onClick={(e) => { 
+                                            e.stopPropagation(); 
+                                            addToCart(p, p.sizes[0]); 
+                                            setIsCartOpen(true); 
+                                        }}
+                                        className="bg-white text-black text-[10px] font-bold uppercase tracking-widest px-6 py-3 shadow-xl hover:bg-black hover:text-white transition-colors"
+                                    >
+                                        Buy Now
+                                    </button>
+                                </div>
+                            </div>
+                        </RevealOnScroll>
                     ))}
                     {/* View All Card at end of scroll */}
                     <div 
@@ -275,6 +289,66 @@ const TheJournal = () => {
     );
 };
 
+const ShopTheLook = () => {
+    const { setView, setActiveProduct } = useStore();
+    const lookProducts = PRODUCTS.slice(2, 5); // Picking products for the 'look'
+
+    return (
+        <section className="py-24 bg-brand-off-white border-b border-gray-200">
+            <div className="max-w-[1920px] mx-auto px-6 md:px-12">
+                <div className="flex flex-col md:flex-row gap-12 items-center">
+                    {/* Main Look Image */}
+                    <div className="w-full md:w-1/2 relative aspect-[3/4] overflow-hidden group">
+                        <img 
+                            src="/items/CraftingSilence.jpeg" 
+                            alt="The Look" 
+                            className="absolute inset-0 w-full h-full object-cover transition-transform duration-[3s] group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-black/5"></div>
+                    </div>
+
+                    {/* Look Items */}
+                    <div className="w-full md:w-1/2 space-y-12">
+                        <div>
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block mb-4">(05) — Editorial</span>
+                            <h2 className="text-5xl font-serif italic mb-6">The Modern Uniform</h2>
+                            <p className="text-gray-500 max-w-sm font-light leading-relaxed">
+                                A curated selection of pieces designed to be worn together. Harmonious textures and precise tailoring for the contemporary silhouette.
+                            </p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {lookProducts.map((p) => (
+                                <div 
+                                    key={p.id} 
+                                    className="cursor-pointer group flex gap-4 items-center" 
+                                    onClick={() => { setActiveProduct(p); setView('product'); window.scrollTo(0, 0); }}
+                                >
+                                    <div className="w-20 h-28 bg-white overflow-hidden shrink-0">
+                                        <LazyImage src={p.image} alt={p.name} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                                    </div>
+                                    <div>
+                                        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{p.category}</p>
+                                        <h4 className="text-sm font-serif italic">{p.name}</h4>
+                                        <p className="text-xs font-light mt-1">${p.price}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <button 
+                            onClick={() => { setView('collections'); window.scrollTo(0, 0); }}
+                            className="px-8 py-3 bg-black text-white text-[10px] font-bold uppercase tracking-widest hover:bg-white hover:text-black border border-black transition-all"
+                        >
+                            Shop the Collection
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
 export const HomeView = () => {
     return (
         <div className="bg-brand-off-white">
@@ -283,6 +357,7 @@ export const HomeView = () => {
             <CuratedGrid />
             <CategoryList />
             <ShopNewAndNow />
+            <ShopTheLook />
             <TheJournal />
         </div>
     )

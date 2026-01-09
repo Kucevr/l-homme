@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Icons, RevealOnScroll } from './ui';
+import { Icons, RevealOnScroll, LazyImage } from './ui';
 
 interface Article {
   id: number;
@@ -94,10 +94,10 @@ export const Journal = () => {
       <section className="border-b border-gray-200">
         <div className="grid grid-cols-1 lg:grid-cols-2">
           <div className="relative h-[500px] lg:h-[700px] overflow-hidden group cursor-pointer">
-            <img 
+            <LazyImage 
               src={featuredArticle.image}
               alt={featuredArticle.title}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105"
+              className="absolute inset-0 w-full h-full transition-transform duration-[1.5s] group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
           </div>
@@ -148,10 +148,10 @@ export const Journal = () => {
             {regularArticles.map(article => (
               <article key={article.id} className="group cursor-pointer">
                 <div className="relative aspect-[4/5] overflow-hidden mb-6 bg-gray-100">
-                  <img 
+                  <LazyImage 
                     src={article.image}
                     alt={article.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="absolute inset-0 w-full h-full transition-transform duration-700 group-hover:scale-105"
                   />
                 </div>
 

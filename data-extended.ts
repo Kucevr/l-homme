@@ -4,7 +4,13 @@ export interface ProductDetails {
   features: string[];
   fit: string;
   madeIn: string;
+  story?: string; // Long form story text
   completeTheLook: number[]; // Product IDs for recommendations
+  craft?: {
+    title: string;
+    description: string;
+    image: string;
+  };
 }
 
 export const PRODUCT_DETAILS: Record<number, ProductDetails> = {
@@ -14,7 +20,12 @@ export const PRODUCT_DETAILS: Record<number, ProductDetails> = {
     features: ["Button-down collar", "Chest pocket", "Split back yoke", "Curved hem"],
     fit: "Regular fit with room through chest and waist",
     madeIn: "Portugal",
-    completeTheLook: [3, 20, 11] // Chino, Belt, Derby
+    completeTheLook: [3, 20, 11], // Chino, Belt, Derby
+    craft: {
+        title: "The Single-Needle Stitch",
+        description: "Each shirt is constructed using traditional single-needle tailoring. This slower process creates a cleaner finish inside and out, ensuring the garment retains its shape for years.",
+        image: "https://images.unsplash.com/photo-1558232108-9a244a5619bb?q=80&w=1200"
+    }
   },
   2: { // Merino Rollneck
     materials: ["100% Superfine Merino Wool", "12-gauge knit", "Ribbed trims"],
@@ -22,7 +33,12 @@ export const PRODUCT_DETAILS: Record<number, ProductDetails> = {
     features: ["Rollneck collar", "Ribbed cuffs and hem", "Seamless construction", "Lightweight"],
     fit: "Slim fit, true to size",
     madeIn: "Italy",
-    completeTheLook: [8, 4, 6] // Wool Trouser, Wool Coat, Chelsea Boot
+    completeTheLook: [8, 4, 6], // Wool Trouser, Wool Coat, Chelsea Boot
+    craft: {
+        title: "Seamless Knitting",
+        description: "Knitted on advanced Japanese Shima Seiki machines, this rollneck is produced as a single piece. No seams means zero friction and a perfect, sculptural silhouette.",
+        image: "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=1200"
+    }
   },
   3: { // Tapered Pleat Chino
     materials: ["98% Cotton, 2% Elastane", "High-density twill", "YKK zipper"],
