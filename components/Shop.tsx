@@ -21,7 +21,7 @@ const normalizeCategoryName = (category: string): string => {
   return mapping[category.toUpperCase()] || category;
 };
 
-export const Shop = () => {
+const Shop = () => {
   const { setView, setActiveProduct, wishlist, toggleWishlist, selectedCategory } = useStore();
   const [activeCategory, setActiveCategory] = useState(selectedCategory ? normalizeCategoryName(selectedCategory) : "All");
 
@@ -82,7 +82,7 @@ export const Shop = () => {
                    <ProductCard 
                       key={p.id} 
                       product={p} 
-                      onClick={(p) => { setActiveProduct(p); setView('product'); window.scrollTo(0, 0); }}
+                      onClick={(p) => { setActiveProduct(p); window.scrollTo(0, 0); }}
                       isWishlisted={wishlist.includes(p.id)}
                       onToggleWishlist={() => toggleWishlist(p.id)}
                       className="h-full bg-white hover:z-10"
@@ -98,3 +98,5 @@ export const Shop = () => {
     </div>
   );
 };
+
+export default Shop;

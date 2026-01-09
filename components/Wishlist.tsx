@@ -102,3 +102,4 @@ export const WishlistOverlay = () => {
     </AnimatePresence>
   );
 };
+export default WishlistOverlay;

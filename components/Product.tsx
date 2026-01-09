@@ -416,3 +416,4 @@ export const ProductDetail = ({ product }: { product: Product }) => {
     </>
   );
 };
+export default ProductDetail;

@@ -11,14 +11,25 @@ import { useStore } from "./store";
 import { Header } from "./components/Header";
 import { Marquee, Icons, ErrorBoundary } from "./components/ui";
 
-const HomeView = lazy(() => import("./components/Home").then(m => ({ default: m.HomeView })));
-const ProductDetail = lazy(() => import("./components/Product").then(m => ({ default: m.ProductDetail })));
-const SearchOverlay = lazy(() => import("./components/Search").then(m => ({ default: m.SearchOverlay })));
-const Shop = lazy(() => import("./components/Shop").then(m => ({ default: m.Shop })));
-const NewsletterModal = lazy(() => import("./components/Newsletter").then(m => ({ default: m.NewsletterModal })));
-const Locations = lazy(() => import("./components/Locations").then(m => ({ default: m.Locations })));
-const Journal = lazy(() => import("./components/Journal").then(m => ({ default: m.Journal })));
-const WishlistOverlay = lazy(() => import("./components/Wishlist").then(m => ({ default: m.WishlistOverlay })));
+const HomeView = lazy(() => import("./components/Home"));
+const ProductDetail = lazy(() => import("./components/Product"));
+const SearchOverlay = lazy(() => import("./components/Search"));
+const Shop = lazy(() => import("./components/Shop"));
+const NewArrivals = lazy(() => import("./components/NewArrivals"));
+const NewsletterModal = lazy(() => import("./components/Newsletter"));
+const Locations = lazy(() => import("./components/Locations"));
+const Journal = lazy(() => import("./components/Journal"));
+const WishlistOverlay = lazy(() => import("./components/Wishlist"));
+const Philosophy = lazy(() => import("./components/Philosophy"));
+
+// Service Pages
+const Shipping = lazy(() => import("./components/Shipping"));
+const Returns = lazy(() => import("./components/Returns"));
+const Contact = lazy(() => import("./components/Contact"));
+
+// Legal Pages
+const PrivacyPolicy = lazy(() => import("./components/PrivacyPolicy"));
+const TermsOfService = lazy(() => import("./components/TermsOfService"));
 
 const App = () => {
   const { 
@@ -40,6 +51,7 @@ const App = () => {
   const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   const handleNavigate = (v: any) => {
+      // Small delay to allow Menu to close smoothly
       setView(v);
       window.scrollTo(0, 0);
   };
@@ -81,25 +93,32 @@ const App = () => {
         />
         
         <main>
-          <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin"></div></div>}>
-            <AnimatePresence>
+            <AnimatePresence mode="wait">
               <motion.div
                 key={view + (activeProduct?.id || "")}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
               >
-                {view === "home" && <HomeView />}
-                {view === "collections" && <Shop />}
-                {view === "product" && activeProduct && (
-                  <ProductDetail product={activeProduct} />
-                )}
-                {view === "locations" && <Locations />}
-                {view === "journal" && <Journal />}
+                <Suspense fallback={<div className="h-screen flex items-center justify-center"><div className="w-8 h-8 border-2 border-black border-t-transparent rounded-full animate-spin"></div></div>}>
+                    {view === "home" && <HomeView />}
+                    {view === "collections" && <Shop />}
+                    {view === "new-arrivals" && <NewArrivals />}
+                    {view === "product" && activeProduct && (
+                      <ProductDetail product={activeProduct} />
+                    )}
+                    {view === "locations" && <Locations />}
+                    {view === "journal" && <Journal />}
+                    {view === "shipping" && <Shipping />}
+                    {view === "returns" && <Returns />}
+                    {view === "contact" && <Contact />}
+                    {view === "privacy" && <PrivacyPolicy />}
+                    {view === "terms" && <TermsOfService />}
+                    {view === "philosophy" && <Philosophy />}
+                </Suspense>
               </motion.div>
             </AnimatePresence>
-          </Suspense>
         </main>
 
         <footer className="bg-black text-white border-t border-black">
@@ -119,7 +138,7 @@ const App = () => {
                  <div className="p-8 md:p-12">
                     <h4 className="text-[10px] font-bold uppercase tracking-widest mb-8 text-gray-500">Shop</h4>
                     <ul className="space-y-4 text-sm font-medium text-gray-300">
-                       <li className="hover:text-white cursor-pointer transition-colors" onClick={() => handleNavigate("collections")}>New Arrivals</li>
+                       <li className="hover:text-white cursor-pointer transition-colors" onClick={() => handleNavigate("new-arrivals")}>New Arrivals</li>
                        <li className="hover:text-white cursor-pointer transition-colors" onClick={() => handleNavigate("collections")}>Collections</li>
                        <li className="hover:text-white cursor-pointer transition-colors" onClick={() => handleNavigate("collections")}>Essentials</li>
                     </ul>
@@ -128,16 +147,16 @@ const App = () => {
                     <h4 className="text-[10px] font-bold uppercase tracking-widest mb-8 text-gray-500">Atelier</h4>
                     <ul className="space-y-4 text-sm font-medium text-gray-300">
                        <li className="hover:text-white cursor-pointer transition-colors" onClick={() => handleNavigate("journal")}>The Journal</li>
-                       <li className="hover:text-white cursor-pointer transition-colors" onClick={() => handleNavigate("home")}>Philosophy</li>
+                       <li className="hover:text-white cursor-pointer transition-colors" onClick={() => handleNavigate("philosophy")}>Philosophy</li>
                        <li className="hover:text-white cursor-pointer transition-colors" onClick={() => handleNavigate("locations")}>Visit Us</li>
                     </ul>
                  </div>
                  <div className="p-8 md:p-12">
                     <h4 className="text-[10px] font-bold uppercase tracking-widest mb-8 text-gray-500">Service</h4>
                     <ul className="space-y-4 text-sm font-medium text-gray-300">
-                       <li className="hover:text-white cursor-pointer transition-colors">Shipping</li>
-                       <li className="hover:text-white cursor-pointer transition-colors">Returns</li>
-                       <li className="hover:text-white cursor-pointer transition-colors">Contact</li>
+                       <li className="hover:text-white cursor-pointer transition-colors" onClick={() => handleNavigate("shipping")}>Shipping</li>
+                       <li className="hover:text-white cursor-pointer transition-colors" onClick={() => handleNavigate("returns")}>Returns</li>
+                       <li className="hover:text-white cursor-pointer transition-colors" onClick={() => handleNavigate("contact")}>Contact</li>
                     </ul>
                  </div>
                  <div className="p-8 md:p-12 bg-white/[0.02]">
@@ -154,8 +173,8 @@ const App = () => {
           <div className="p-8 md:px-16 md:py-12 flex flex-col md:flex-row justify-between items-center gap-8">
              <div className="flex gap-8 text-[10px] font-bold uppercase tracking-widest text-gray-600">
                 <span>© 2026 L'HOMME Atelier</span>
-                <span className="cursor-pointer hover:text-white transition-colors">Privacy Policy</span>
-                <span className="cursor-pointer hover:text-white transition-colors">Terms of Service</span>
+                <span className="cursor-pointer hover:text-white transition-colors" onClick={() => handleNavigate("privacy")}>Privacy Policy</span>
+                <span className="cursor-pointer hover:text-white transition-colors" onClick={() => handleNavigate("terms")}>Terms of Service</span>
              </div>
              
              <div className="text-[10px] font-bold uppercase tracking-widest text-gray-600 flex items-center gap-2">

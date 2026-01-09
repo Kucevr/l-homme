@@ -38,8 +38,13 @@ export const useStore = create<AppState>()(
       isWishlistOpen: false,
 
       setView: (view) => set((state) => {
-        if (view !== 'collections') {
-          return { view, selectedCategory: undefined };
+        const resetViews: PageView[] = ['home', 'collections', 'new-arrivals', 'journal', 'locations', 'shipping', 'returns', 'contact', 'privacy', 'terms', 'philosophy'];
+        if (resetViews.includes(view)) {
+          return { 
+            view, 
+            selectedCategory: (view === 'collections' || view === 'new-arrivals') ? state.selectedCategory : undefined, 
+            activeProduct: null 
+          };
         }
         return { view };
       }),

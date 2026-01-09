@@ -193,7 +193,7 @@ const ShopNewAndNow = () => {
                     <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block mb-4">(04) — New & Now</span>
                     <h2 className="text-5xl font-serif italic leading-none">The Latest arrivals</h2>
                 </div>
-                <button onClick={() => { setView('collections'); window.scrollTo(0, 0); }} className="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 hover:opacity-50 transition-opacity">
+                <button onClick={() => { setView('new-arrivals'); window.scrollTo(0, 0); }} className="text-xs font-bold uppercase tracking-widest border-b border-black pb-1 hover:opacity-50 transition-opacity">
                     View All
                 </button>
              </div>
@@ -355,7 +355,7 @@ const ShopTheLook = () => {
     );
 };
 
-export const HomeView = () => {
+const HomeView = () => {
     return (
         <div className="bg-brand-off-white">
             <Hero />
@@ -368,3 +368,5 @@ export const HomeView = () => {
         </div>
     )
 }
+
+export default HomeView;

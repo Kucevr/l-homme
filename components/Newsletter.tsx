@@ -39,3 +39,4 @@ export const NewsletterModal = () => {
         </div>
     )
 }
+export default NewsletterModal;

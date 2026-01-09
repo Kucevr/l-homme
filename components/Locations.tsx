@@ -42,7 +42,7 @@ const LOCATIONS: Location[] = [
   }
 ];
 
-export const Locations = () => {
+const Locations = () => {
   const [activeCity, setActiveCity] = useState("Paris");
   const activeLocation = LOCATIONS.find(l => l.city === activeCity) || LOCATIONS[0];
 
@@ -193,3 +193,5 @@ export const Locations = () => {
     </div>
   );
 };
+
+export default Locations;

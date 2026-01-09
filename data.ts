@@ -1,5 +1,5 @@
 
-export type PageView = 'home' | 'collections' | 'product' | 'journal' | 'locations' | 'stores';
+export type PageView = 'home' | 'collections' | 'new-arrivals' | 'product' | 'journal' | 'locations' | 'stores' | 'shipping' | 'returns' | 'contact' | 'privacy' | 'terms' | 'philosophy';
 export type CategoryType = 'All' | 'Outerwear' | 'Knitwear' | 'Shirting' | 'Trousers' | 'Footwear' | 'Essentials' | 'Tailoring' | 'Leather Goods' | 'Fragrance' | 'Accessories';
 
 export interface Product {
@@ -27,10 +27,16 @@ export interface PageLink {
 }
 
 export const SEARCHABLE_PAGES: PageLink[] = [
+  { id: 'new-arrivals', title: 'New Arrivals', view: 'new-arrivals', description: 'Explore our latest collection of structural garments and Italian merino knitwear.' },
+  { id: 'collections', title: 'The Collection', view: 'collections', description: 'Browse our full range of outerwear, tailoring, and footwear.' },
   { id: 'journal', title: 'The Journal', view: 'journal', description: 'Editorial stories on craft, style, and philosophy.' },
   { id: 'locations', title: 'Visit Us', view: 'locations', description: 'Explore our ateliers in Paris, Tokyo, and New York.' },
-  { id: 'shipping', title: 'Shipping & Returns', view: 'home', description: 'Details on our worldwide shipping and return policy.' },
-  { id: 'philosophy', title: 'Atelier Philosophy', view: 'home', description: 'The core values behind L\'HOMME design.' },
+  { id: 'shipping', title: 'Shipping & Delivery', view: 'shipping', description: 'Details on our worldwide concierge shipping and delivery estimates.' },
+  { id: 'returns', title: 'Returns & Exchanges', view: 'returns', description: 'Information on our global return policy and exchange process.' },
+  { id: 'contact', title: 'Contact Us', view: 'contact', description: 'Reach out to our concierge team for styling advice or assistance.' },
+  { id: 'privacy', title: 'Privacy Policy', view: 'privacy', description: 'How we handle and protect your personal data.' },
+  { id: 'terms', title: 'Terms of Service', view: 'terms', description: 'Rules and regulations for using the L\'HOMME website.' },
+  { id: 'philosophy', title: 'Atelier Philosophy', view: 'philosophy', description: 'The core values behind L\'HOMME design and structural precision.' },
 ];
 
 export const PRODUCTS: Product[] = [

@@ -11,7 +11,7 @@ interface MenuProps {
 
 const MENU_ITEMS = [
   { label: 'Shop All', view: 'collections', image: 'https://images.unsplash.com/photo-1598033129183-c4f50c736f10?q=80&w=1000&auto=format&fit=crop' },
-  { label: 'New Arrivals', view: 'collections', image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1000&auto=format&fit=crop' },
+  { label: 'New Arrivals', view: 'new-arrivals', image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1000&auto=format&fit=crop' },
   { label: 'Editorial', view: 'journal', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2000&auto=format&fit=crop' },
   { label: 'Locations', view: 'locations', image: 'https://images.unsplash.com/photo-1515347619252-60a6bf4fffce?q=80&w=1000&auto=format&fit=crop' },
 ];

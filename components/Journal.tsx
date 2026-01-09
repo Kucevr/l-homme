@@ -71,7 +71,7 @@ const ARTICLES: Article[] = [
   }
 ];
 
-export const Journal = () => {
+const Journal = () => {
   const featuredArticle = ARTICLES.find(a => a.featured) || ARTICLES[0];
   const regularArticles = ARTICLES.filter(a => !a.featured);
 
@@ -208,3 +208,5 @@ export const Journal = () => {
     </div>
   );
 };
+
+export default Journal;

@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 interface RevealOnScrollProps {
@@ -8,11 +7,20 @@ interface RevealOnScrollProps {
   delay?: number;
 }
 
-export class ErrorBoundary extends React.Component<any, any> {
-  state = { hasError: false };
+interface ErrorBoundaryProps {
+  children?: React.ReactNode;
+}
 
-  static getDerivedStateFromError(_: Error) {
-    return { hasError: true };
+interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
+export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  state: ErrorBoundaryState = { hasError: false, error: null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
@@ -20,11 +28,12 @@ export class ErrorBoundary extends React.Component<any, any> {
   }
 
   render() {
-    if (this.state.hasError) {
+    if ((this as any).state.hasError) {
       return (
         <div className="h-screen flex flex-col items-center justify-center bg-white p-6 text-center">
           <h2 className="text-2xl font-serif italic mb-4">Something went wrong.</h2>
-          <p className="text-sm text-gray-500 mb-8 max-w-xs">We encountered an unexpected error. Please try refreshing the page.</p>
+          <p className="text-sm text-gray-500 mb-2 max-w-xs">{(this as any).state.error?.message}</p>
+          <p className="text-[10px] text-gray-400 mb-8 max-w-xs uppercase tracking-widest">Please try refreshing the page.</p>
           <button 
             onClick={() => window.location.reload()}
             className="px-8 py-3 bg-black text-white text-[10px] font-bold uppercase tracking-widest"
@@ -35,20 +44,19 @@ export class ErrorBoundary extends React.Component<any, any> {
       );
     }
 
-    // @ts-ignore
-    return this.props.children;
+    return (this as any).props.children;
   }
 }
 
 export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: string, className?: string }) => {
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = React.useState(false);
   const blurUrl = `${src.split('?')[0]}?auto=format&blur=100&w=50`; 
   
   // Adaptive loading: Choose quality based on connection
-  const [optimizedSrc, setOptimizedSrc] = useState(src);
-  const [srcSet, setSrcSet] = useState("");
+  const [optimizedSrc, setOptimizedSrc] = React.useState(src);
+  const [srcSet, setSrcSet] = React.useState("");
 
-  useEffect(() => {
+  React.useEffect(() => {
     const connection = (navigator as any).connection;
     let quality = 80;
     let width = 1200;
@@ -105,7 +113,7 @@ export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: stri
 };
 
 export const RevealText = ({ children }: { children: string }) => {
-  const ref = useRef(null);
+  const ref = React.useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end center"]
@@ -130,13 +138,14 @@ const Char = ({ char, progress, range }: any) => {
   return <motion.span style={{ opacity }}>{char}</motion.span>;
 };
 
-export const CharRevealText = ({ text, className = "" }: { text: string, className?: string }) => {
-  const ref = useRef(null);
+export const CharRevealText = ({ text, className = "" }: { text?: string, className?: string }) => {
+  const ref = React.useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
      offset: ["start 0.9", "start 0.3"]
   });
 
+  if (!text) return null;
   const characters = text.split("");
   
   return (
@@ -198,15 +207,29 @@ export const Icons = {
   Star: ({ className = "", ...props }) => (
     <svg className={className} {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
   ),
+  Quote: ({ className = "", ...props }) => (
+    <svg className={className} {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.75-2-2-2H4c-1.25 0-2 .75-2 2v7c0 1.25.75 2 2 2h4c0 2.5-1.75 4.5-4 4.5V21zm12 0c3 0 7-1 7-8V5c0-1.25-.75-2-2-2h-4c-1.25 0-2 .75-2 2v7c0 1.25.75 2 2 2h4c0 2.5-1.75 4.5-4 4.5V21z"></path></svg>
+  ),
+  Check: ({ className = "", ...props }) => (
+    <svg className={className} {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  ),
 };
 
 export const RevealOnScroll: React.FC<RevealOnScrollProps> = ({ children, className = "", delay = 0 }) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = React.useState(false);
+  const ref = React.useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
+    if (!ref.current) return;
+    
+    // Check if IntersectionObserver is available (safety)
+    if (typeof IntersectionObserver === 'undefined') {
+        setIsVisible(true);
+        return;
+    }
+
     const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) {
+      if (entry && entry.isIntersecting) {
         setTimeout(() => {
             setIsVisible(true);
         }, delay);
@@ -214,7 +237,7 @@ export const RevealOnScroll: React.FC<RevealOnScrollProps> = ({ children, classN
       }
     }, { threshold: 0.1 });
 
-    if (ref.current) observer.observe(ref.current);
+    observer.observe(ref.current);
     return () => observer.disconnect();
   }, [delay]);
 

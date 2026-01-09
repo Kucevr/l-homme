@@ -154,3 +154,4 @@ export const SearchOverlay = ({ isOpen, onClose, onProductClick }: SearchProps) 
     </div>
   );
 };
+export default SearchOverlay;
