@@ -17,6 +17,7 @@ const MENU_ITEMS = [
   { label: 'Editorial', label_ru: 'Журнал', view: 'journal', image: '/items/журнал.jpg' },
   { label: 'Philosophy', label_ru: 'Философия', view: 'philosophy', image: '/items/философия.jpg' },
   { label: 'Sustainability', label_ru: 'Экологичность', view: 'sustainability', image: '/items/экологичность.jpg' },
+  { label: 'Locations', label_ru: 'Бутики', view: 'locations', image: 'https://images.unsplash.com/photo-1541336032412-2048a678540d?q=80&w=2000&auto=format&fit=crop' },
 ];
 
 const LanguageSwitcher = () => {
