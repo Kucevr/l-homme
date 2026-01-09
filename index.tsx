@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { HelmetProvider, Helmet } from "react-helmet-async";
 import { AnimatePresence, motion, useScroll, useVelocity, useTransform, useSpring } from "framer-motion";
 
+import "./index.css";
 import { PRODUCTS } from "./data";
 import "./data-extended"; 
 import { useStore } from "./store";

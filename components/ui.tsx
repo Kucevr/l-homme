@@ -42,10 +42,11 @@ export class ErrorBoundary extends React.Component<any, any> {
 
 export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: string, className?: string }) => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const blurUrl = `${src}?auto=format&blur=100&w=50`; 
+  const blurUrl = `${src.split('?')[0]}?auto=format&blur=100&w=50`; 
   
   // Adaptive loading: Choose quality based on connection
   const [optimizedSrc, setOptimizedSrc] = useState(src);
+  const [srcSet, setSrcSet] = useState("");
 
   useEffect(() => {
     const connection = (navigator as any).connection;
@@ -54,21 +55,31 @@ export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: stri
 
     if (connection) {
       if (connection.effectiveType === '4g') {
-        quality = 90;
+        quality = 85;
         width = 1600;
       } else if (connection.effectiveType === '3g') {
-        quality = 60;
+        quality = 65;
         width = 800;
       } else if (connection.effectiveType === '2g') {
-        quality = 30;
+        quality = 40;
         width = 400;
       }
     }
     
     // Append Unsplash optimization params if it's an unsplash URL
     if (src.includes('unsplash.com')) {
+      const base = src.split('?')[0];
+      const params = src.includes('?') ? src.split('?')[1] : '';
       const separator = src.includes('?') ? '&' : '?';
-      setOptimizedSrc(`${src}${separator}q=${quality}&w=${width}&auto=format`);
+      
+      setOptimizedSrc(`${src}${separator}q=${quality}&w=${width}&auto=format&fit=crop`);
+      
+      // Responsive srcset
+      const widths = [400, 800, 1200, 1600, 2000];
+      const set = widths.map(w => 
+        `${base}?${params}${params ? '&' : ''}q=${quality}&w=${w}&auto=format&fit=crop ${w}w`
+      ).join(', ');
+      setSrcSet(set);
     }
   }, [src]);
 
@@ -78,9 +89,12 @@ export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: stri
         src={blurUrl}
         alt={alt}
         className={`w-full h-full object-cover transition-opacity duration-1000 ${isLoaded ? 'opacity-0' : 'opacity-100'}`}
+        aria-hidden="true"
       />
       <img
         src={optimizedSrc}
+        srcSet={srcSet}
+        sizes={className.includes('w-') ? '30vw' : '100vw'} 
         alt={alt}
         loading="lazy"
         onLoad={() => setIsLoaded(true)}
