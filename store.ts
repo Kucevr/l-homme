@@ -1,9 +1,11 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { Product, CartItem, PageView } from './data';
+import { Language } from './translations';
 
 interface AppState {
   view: PageView;
+  language: Language;
   activeProduct: Product | null;
   cart: CartItem[];
   wishlist: number[];
@@ -14,6 +16,7 @@ interface AppState {
   
   // Actions
   setView: (view: PageView) => void;
+  setLanguage: (lang: Language) => void;
   setActiveProduct: (product: Product | null) => void;
   setSelectedCategory: (category: string | undefined) => void;
   setIsCartOpen: (isOpen: boolean) => void;
@@ -29,6 +32,7 @@ export const useStore = create<AppState>()(
   persist(
     (set) => ({
       view: 'home',
+      language: 'en',
       activeProduct: null,
       cart: [],
       wishlist: [],
@@ -38,7 +42,7 @@ export const useStore = create<AppState>()(
       isWishlistOpen: false,
 
       setView: (view) => set((state) => {
-        const resetViews: PageView[] = ['home', 'collections', 'new-arrivals', 'journal', 'locations', 'shipping', 'returns', 'contact', 'privacy', 'terms', 'philosophy'];
+        const resetViews: PageView[] = ['home', 'collections', 'new-arrivals', 'journal', 'locations', 'shipping', 'returns', 'contact', 'privacy', 'terms', 'philosophy', 'sustainability'];
         if (resetViews.includes(view)) {
           return { 
             view, 
@@ -48,6 +52,8 @@ export const useStore = create<AppState>()(
         }
         return { view };
       }),
+
+      setLanguage: (language) => set({ language }),
 
       setActiveProduct: (product) => set((state) => {
         if (!product) return { activeProduct: null };

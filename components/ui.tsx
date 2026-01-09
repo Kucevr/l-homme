@@ -48,9 +48,14 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
   }
 }
 
+export const Skeleton = ({ className }: { className?: string }) => (
+  <div className={`relative overflow-hidden bg-stone-200 ${className || ''}`}>
+    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-stone-100/50 to-transparent animate-shimmer" />
+  </div>
+);
+
 export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: string, className?: string }) => {
   const [isLoaded, setIsLoaded] = React.useState(false);
-  const blurUrl = `${src.split('?')[0]}?auto=format&blur=100&w=50`; 
   
   // Adaptive loading: Choose quality based on connection
   const [optimizedSrc, setOptimizedSrc] = React.useState(src);
@@ -74,7 +79,6 @@ export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: stri
       }
     }
     
-    // Append Unsplash optimization params if it's an unsplash URL
     if (src.includes('unsplash.com')) {
       const base = src.split('?')[0];
       const params = src.includes('?') ? src.split('?')[1] : '';
@@ -82,7 +86,6 @@ export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: stri
       
       setOptimizedSrc(`${src}${separator}q=${quality}&w=${width}&auto=format&fit=crop`);
       
-      // Responsive srcset
       const widths = [400, 800, 1200, 1600, 2000];
       const set = widths.map(w => 
         `${base}?${params}${params ? '&' : ''}q=${quality}&w=${w}&auto=format&fit=crop ${w}w`
@@ -93,12 +96,11 @@ export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: stri
 
   return (
     <div className={`relative overflow-hidden bg-stone-100 ${className}`}>
-      <img
-        src={blurUrl}
-        alt={alt}
-        className={`w-full h-full object-cover transition-opacity duration-1000 ${isLoaded ? 'opacity-0' : 'opacity-100'}`}
-        aria-hidden="true"
-      />
+      {!isLoaded && (
+        <div className="absolute inset-0 z-10">
+          <Skeleton className="w-full h-full" />
+        </div>
+      )}
       <img
         src={optimizedSrc}
         srcSet={srcSet}
@@ -106,7 +108,7 @@ export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: stri
         alt={alt}
         loading="lazy"
         onLoad={() => setIsLoaded(true)}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        className={`w-full h-full object-cover transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
       />
     </div>
   );
@@ -212,6 +214,12 @@ export const Icons = {
   ),
   Check: ({ className = "", ...props }) => (
     <svg className={className} {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+  ),
+  Scissors: ({ className = "", ...props }) => (
+    <svg className={className} {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.12 15.88"/><path d="M14.47 14.48 20 20"/><path d="m8.12 8.12 1.94 1.94"/></svg>
+  ),
+  Layers: ({ className = "", ...props }) => (
+    <svg className={className} {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.27a2 2 0 0 0 0 3.46l8.57 4.09a2 2 0 0 0 1.66 0l8.57-4.09a2 2 0 0 0 0-3.46Z"/><path d="m2.6 14.27 8.57 4.09a2 2 0 0 0 1.66 0l8.57-4.09"/><path d="m2.6 10.27 8.57 4.09a2 2 0 0 0 1.66 0l8.57-4.09"/></svg>
   ),
 };
 

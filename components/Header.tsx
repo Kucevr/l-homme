@@ -5,6 +5,7 @@ import { Icons } from './ui';
 import { FullScreenMenu } from './Menu';
 import { PageView } from '../data';
 import { useStore } from '../store';
+import { translations } from '../translations';
 
 interface HeaderProps {
   cartCount: number;
@@ -32,10 +33,32 @@ const RollingNumber = ({ value }: { value: number }) => {
     );
 };
 
+const LanguageSwitcher = () => {
+  const { language, setLanguage } = useStore();
+  
+  return (
+    <div className="flex items-center gap-2 ml-4 border-l border-gray-200 pl-4">
+      <button 
+        onClick={() => setLanguage('en')}
+        className={`text-[10px] font-bold tracking-tighter transition-colors ${language === 'en' ? 'text-black underline underline-offset-4' : 'text-gray-400 hover:text-black'}`}
+      >
+        EN
+      </button>
+      <span className="text-[10px] text-gray-300">/</span>
+      <button 
+        onClick={() => setLanguage('ru')}
+        className={`text-[10px] font-bold tracking-tighter transition-colors ${language === 'ru' ? 'text-black underline underline-offset-4' : 'text-gray-400 hover:text-black'}`}
+      >
+        RU
+      </button>
+    </div>
+  );
+};
+
 export const Header = ({ cartCount, onOpenCart, onNavigate, onOpenSearch }: HeaderProps) => {
   const [scrolled, setScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { wishlist, setIsWishlistOpen } = useStore();
+  const { wishlist, setIsWishlistOpen, language } = useStore();
   const cartControls = useAnimation();
   const wishlistControls = useAnimation();
   
@@ -70,15 +93,18 @@ export const Header = ({ cartCount, onOpenCart, onNavigate, onOpenSearch }: Head
         className={`fixed ${scrolled ? 'top-0' : 'top-[16px]'} left-0 w-full z-40 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md border-b border-gray-100 py-4 shadow-sm' : 'bg-transparent border-transparent py-8 text-black'}`}
       >
         <div className="max-w-[1920px] mx-auto px-6 md:px-12 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center">
             <button 
               onClick={() => setIsMenuOpen(true)} 
               aria-label="Open menu"
               className="flex items-center gap-3 hover:opacity-50 transition-opacity group focus:outline-none focus-visible:ring-2 focus-visible:ring-black px-2 py-1"
             >
               <Icons.Menu />
-              <span className="hidden md:inline text-xs font-bold uppercase tracking-widest group-hover:underline">Menu</span>
+              <span className="hidden md:inline text-xs font-bold uppercase tracking-widest group-hover:underline">
+                {translations[language].nav.menu}
+              </span>
             </button>
+            <LanguageSwitcher />
           </div>
 
           <div className="absolute left-1/2 transform -translate-x-1/2">
@@ -97,7 +123,9 @@ export const Header = ({ cartCount, onOpenCart, onNavigate, onOpenSearch }: Head
               aria-label={`View wishlist, ${wishlist.length} items`}
               className="hover:opacity-50 transition-opacity relative flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-black p-2"
             >
-              <span className="hidden md:inline text-xs font-bold uppercase tracking-widest">Saved</span>
+              <span className="hidden md:inline text-xs font-bold uppercase tracking-widest">
+                {translations[language].nav.saved}
+              </span>
               <motion.div animate={wishlistControls} className="relative">
                 <Icons.Heart />
                 {wishlist.length > 0 && (
@@ -123,7 +151,9 @@ export const Header = ({ cartCount, onOpenCart, onNavigate, onOpenSearch }: Head
               aria-label={`View cart, ${cartCount} items`}
               className="hover:opacity-50 transition-opacity relative flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-black p-2"
             >
-              <span className="hidden md:inline text-xs font-bold uppercase tracking-widest">Cart</span>
+              <span className="hidden md:inline text-xs font-bold uppercase tracking-widest">
+                {translations[language].nav.cart}
+              </span>
               <motion.div animate={cartControls} className="relative">
                 <Icons.ShoppingBag />
                 {cartCount > 0 && (
@@ -145,3 +175,4 @@ export const Header = ({ cartCount, onOpenCart, onNavigate, onOpenSearch }: Head
     </>
   );
 };
+

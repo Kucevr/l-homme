@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '../store';
 import { PRODUCTS } from '../data';
 import { Icons, LazyImage } from './ui';
+import { translations } from '../translations';
 
 export const WishlistOverlay = () => {
-  const { isWishlistOpen, setIsWishlistOpen, wishlist, toggleWishlist, setActiveProduct, setView } = useStore();
+  const { isWishlistOpen, setIsWishlistOpen, wishlist, toggleWishlist, setActiveProduct, setView, language } = useStore();
+  const t = translations[language].wishlist;
   
   const wishlistedProducts = PRODUCTS.filter(p => wishlist.includes(p.id));
 
@@ -29,9 +31,9 @@ export const WishlistOverlay = () => {
           >
             <div className="p-8 border-b border-gray-100 flex justify-between items-center">
               <div>
-                <h2 className="text-2xl font-serif italic">Wishlist</h2>
+                <h2 className="text-2xl font-serif italic">{t.title}</h2>
                 <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mt-1">
-                  {wishlistedProducts.length} Items Saved
+                  {wishlistedProducts.length} {t.itemsSaved}
                 </p>
               </div>
               <button 
@@ -46,12 +48,12 @@ export const WishlistOverlay = () => {
               {wishlistedProducts.length === 0 ? (
                 <div className="h-full flex flex-col items-center justify-center text-center">
                   <Icons.Heart className="w-12 h-12 text-gray-200 mb-6" />
-                  <p className="font-serif italic text-xl text-gray-400">Your wishlist is empty</p>
+                  <p className="font-serif italic text-xl text-gray-400">{t.empty}</p>
                   <button 
                     onClick={() => { setIsWishlistOpen(false); setView('collections'); }}
                     className="mt-6 text-[10px] font-bold uppercase tracking-widest border-b border-black pb-1"
                   >
-                    Explore Collection
+                    {t.explore}
                   </button>
                 </div>
               ) : (
@@ -63,7 +65,7 @@ export const WishlistOverlay = () => {
                         className="w-24 aspect-[3/4] bg-stone-50 overflow-hidden cursor-pointer"
                         onClick={() => { setActiveProduct(p); setView('product'); setIsWishlistOpen(false); window.scrollTo(0, 0); }}
                       >
-                        <LazyImage src={p.image} alt={p.name} className="group-hover:scale-110 transition-transform duration-700" />
+                        <LazyImage src={p.image} alt={language === 'ru' && p.name_ru ? p.name_ru : p.name} className="group-hover:scale-110 transition-transform duration-700" />
                       </motion.div>
                       <div className="flex-1">
                         <div className="flex justify-between items-start">
@@ -73,7 +75,7 @@ export const WishlistOverlay = () => {
                                 onClick={() => { setActiveProduct(p); setIsWishlistOpen(false); window.scrollTo(0, 0); }}
                                 className="font-serif italic text-lg cursor-pointer hover:text-gray-600 transition-colors"
                             >
-                                {p.name}
+                                {language === 'ru' && p.name_ru ? p.name_ru : p.name}
                             </h4>
                             <p className="text-sm font-light mt-1">${p.price}</p>
                           </div>
@@ -88,7 +90,7 @@ export const WishlistOverlay = () => {
                          onClick={() => { setActiveProduct(p); setIsWishlistOpen(false); window.scrollTo(0, 0); }}
                          className="mt-4 text-[10px] font-bold uppercase tracking-widest border-b border-black pb-1 hover:opacity-50 transition-opacity"
                         >
-                            View Details
+                            {t.viewDetails}
                         </button>
                       </div>
                     </div>
