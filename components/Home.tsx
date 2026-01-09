@@ -34,7 +34,7 @@ export const Hero = () => {
         >
             <img 
                 src="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?q=80&w=2000&auto=format&fit=crop" 
-                alt="L'HOMME Autumn/Winter 24 Campaign - Modern Tailoring" 
+                alt="L'HOMME Autumn/Winter 26 Campaign - Modern Tailoring" 
                 className="w-full h-full object-cover origin-center"
             />
         </motion.div>
