@@ -25,6 +25,7 @@ interface AppState {
   addToCart: (product: Product, size: string) => void;
   removeFromCart: (cartId: string) => void;
   updateQuantity: (cartId: string, delta: number) => void;
+  clearCart: () => void;
   toggleWishlist: (id: number) => void;
 }
 
@@ -100,6 +101,8 @@ export const useStore = create<AppState>()(
           return item;
         })
       })),
+
+      clearCart: () => set({ cart: [] }),
 
       toggleWishlist: (id) => set((state) => ({
         wishlist: state.wishlist.includes(id) 

@@ -90,7 +90,10 @@ export const translations = {
       checkout: "Checkout",
       empty: "Your bag is empty",
       remove: "Remove",
-      buyNow: "Quick Add"
+      buyNow: "Quick Add",
+      orderSuccess: "Order Placed Successfully",
+      orderDesc: "Thank you for your purchase. You will receive a confirmation email shortly.",
+      returnHome: "Return Home"
     },
     footer: {
       about: "A modern atelier dedicated to the pursuit of silence in design. Crafted for the contemporary creative who values form, function, and longevity.",
@@ -242,7 +245,10 @@ export const translations = {
       checkout: "Оформить заказ",
       empty: "Ваша корзина пуста",
       remove: "Удалить",
-      buyNow: "Купить"
+      buyNow: "Купить",
+      orderSuccess: "Заказ успешно оформлен",
+      orderDesc: "Благодарим за покупку. Вы получите письмо с подтверждением в ближайшее время.",
+      returnHome: "На главную"
     },
     footer: {
       about: "Современное ателье, посвященное поиску тишины в дизайне. Создано для современного творческого человека, ценящего форму, функциональность и долговечность.",

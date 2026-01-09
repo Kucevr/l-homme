@@ -90,7 +90,7 @@ export const Header = ({ cartCount, onOpenCart, onNavigate, onOpenSearch }: Head
     <>
       <header 
         role="banner"
-        className={`fixed ${scrolled ? 'top-0' : 'top-[16px]'} left-0 w-full z-40 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md border-b border-gray-100 py-4 shadow-sm' : 'bg-transparent border-transparent py-8 text-black'}`}
+        className={`fixed ${scrolled ? 'top-0' : 'top-[8px]'} left-0 w-full z-40 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md border-b border-gray-100 py-2.5 shadow-sm' : 'bg-transparent border-transparent py-5 text-black'}`}
       >
         <div className="max-w-[1920px] mx-auto px-4 md:px-12 flex items-center">
           {/* Left Section */}
@@ -115,7 +115,7 @@ export const Header = ({ cartCount, onOpenCart, onNavigate, onOpenSearch }: Head
             <button 
               aria-label="Go to home"
               onClick={() => onNavigate('home')} 
-              className="text-2xl sm:text-4xl md:text-5xl font-serif font-black tracking-tighter cursor-pointer hover:tracking-wide transition-all duration-500 focus:outline-none whitespace-nowrap"
+              className="text-xl sm:text-3xl md:text-4xl font-serif font-black tracking-tighter cursor-pointer hover:tracking-wide transition-all duration-500 focus:outline-none whitespace-nowrap"
             >
               L'HOMME
             </button>

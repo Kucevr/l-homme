@@ -1,7 +1,7 @@
 import React, { useState, lazy, Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { HelmetProvider, Helmet } from "react-helmet-async";
-import { AnimatePresence, motion, useScroll, useVelocity, useTransform, useSpring, LazyMotion, domMax, m } from "framer-motion";
+import { AnimatePresence, useScroll, useVelocity, useTransform, useSpring, LazyMotion, m } from "framer-motion";
 
 import "./index.css";
 import { PRODUCTS } from "./data";
@@ -36,11 +36,13 @@ const Contact = lazy(() => import("./components/Contact"));
 const PrivacyPolicy = lazy(() => import("./components/PrivacyPolicy"));
 const TermsOfService = lazy(() => import("./components/TermsOfService"));
 
+const loadFeatures = () => import("framer-motion").then(res => res.domMax);
+
 const App = () => {
   const { 
     view, setView, 
     activeProduct, setActiveProduct,
-    cart, removeFromCart, updateQuantity,
+    cart, removeFromCart, updateQuantity, clearCart,
     isCartOpen, setIsCartOpen,
     language
   } = useStore();
@@ -48,6 +50,7 @@ const App = () => {
   const t = translations[language];
 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isProcessingOrder, setIsProcessingOrder] = useState(false);
 
   // --- Dynamic URL Routing Logic ---
   useEffect(() => {
@@ -65,7 +68,8 @@ const App = () => {
         'returns': 'returns',
         'contact': 'contact',
         'privacy': 'privacy',
-        'terms': 'terms'
+        'terms': 'terms',
+        'checkout-success': 'checkout-success'
       };
 
       if (validViews[path]) {
@@ -103,6 +107,7 @@ const App = () => {
       'contact': '/contact',
       'privacy': '/privacy',
       'terms': '/terms',
+      'checkout-success': '/checkout-success',
       'product': activeProduct ? `/product/${activeProduct.id}` : '/'
     };
 
@@ -128,10 +133,24 @@ const App = () => {
       window.scrollTo(0, 0);
   };
 
+  const handleCheckout = () => {
+    if (cart.length === 0) return;
+    setIsProcessingOrder(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      clearCart();
+      setIsProcessingOrder(false);
+      setIsCartOpen(false);
+      setView('checkout-success');
+      window.scrollTo(0, 0);
+    }, 1500);
+  };
+
   return (
     <HelmetProvider>
       <ErrorBoundary>
-        <LazyMotion features={domMax} strict>
+        <LazyMotion features={loadFeatures}>
           <div className="min-h-screen font-sans bg-white selection:bg-black selection:text-white relative overflow-x-hidden">
             {/* Dynamic Film Grain Texture Overlay */}
           <m.div 
@@ -198,6 +217,29 @@ const App = () => {
                       {view === "terms" && <TermsOfService />}
                       {view === "philosophy" && <Philosophy />}
                       {view === "sustainability" && <Sustainability />}
+                      {view === "checkout-success" && (
+                        <div className="min-h-[80vh] flex items-center justify-center p-6 pt-40">
+                          <m.div 
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            className="max-w-md w-full bg-white border border-gray-100 p-12 text-center shadow-xl"
+                          >
+                             <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center mx-auto mb-8 text-white">
+                                <Icons.Check className="w-8 h-8" />
+                             </div>
+                             <h2 className="text-3xl font-serif italic mb-4">{t.cart.orderSuccess}</h2>
+                             <p className="text-sm text-gray-500 font-light leading-relaxed mb-10">
+                                {t.cart.orderDesc}
+                             </p>
+                             <button
+                               onClick={() => setView('home')}
+                               className="w-full bg-black text-white py-4 text-[10px] font-bold uppercase tracking-[0.2em] hover:bg-white hover:text-black border border-black transition-all duration-300"
+                             >
+                                {t.cart.returnHome}
+                             </button>
+                          </m.div>
+                        </div>
+                      )}
                   </Suspense>
                 </m.div>
               </AnimatePresence>
@@ -223,7 +265,7 @@ const App = () => {
                   ) : (
                      cart.map(item => (
                         <div key={item.cartId} className="flex gap-6">
-                           <motion.div 
+                           <m.div 
                                layoutId={`product-image-${item.id}`}
                                className="w-24 aspect-[3/4] bg-gray-100 cursor-pointer overflow-hidden"
                                onClick={() => {
@@ -234,7 +276,7 @@ const App = () => {
                                }}
                            >
                                <img src={item.image} className="w-full h-full object-cover" />
-                           </motion.div>
+                           </m.div>
                            <div className="flex-1 flex flex-col justify-between py-1">
                               <div className="flex justify-between items-start">
                                  <h4 className="font-serif text-lg leading-tight">
@@ -257,7 +299,14 @@ const App = () => {
                </div>
                <div className="p-6 border-t border-gray-100 bg-gray-50">
                   <div className="flex justify-between mb-6 text-sm"><span>{t.cart.subtotal}</span><span className="font-medium">${subtotal}</span></div>
-                  <button className="w-full bg-black text-white py-4 text-xs font-bold uppercase tracking-widest">{t.cart.checkout}</button>
+                  <button 
+                    onClick={handleCheckout}
+                    disabled={isProcessingOrder || cart.length === 0}
+                    className="w-full bg-black text-white py-4 text-xs font-bold uppercase tracking-widest disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center gap-3"
+                  >
+                    {isProcessingOrder && <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />}
+                    {isProcessingOrder ? (language === 'ru' ? 'Обработка...' : 'Processing...') : t.cart.checkout}
+                  </button>
                </div>
            </div>
         </div>
