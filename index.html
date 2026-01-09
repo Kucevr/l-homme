@@ -14,14 +14,14 @@
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://l-homme.com/" />
+    <meta property="og:url" content="https://l-homme.vercel.app/" />
     <meta property="og:title" content="L'HOMME | Modern Atelier & Men's Luxury Fashion" />
     <meta property="og:description" content="Redefining the boundaries between formal tailoring and casual utility. Essential luxury for the modern man." />
     <meta property="og:image" content="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?q=80&w=2000&auto=format&fit=crop" />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://l-homme.com/" />
+    <meta property="twitter:url" content="https://l-homme.vercel.app/" />
     <meta property="twitter:title" content="L'HOMME | Modern Atelier & Men's Luxury Fashion" />
     <meta property="twitter:description" content="Redefining the boundaries between formal tailoring and casual utility. Essential luxury for the modern man." />
     <meta property="twitter:image" content="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?q=80&w=2000&auto=format&fit=crop" />
@@ -32,10 +32,20 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="manifest" href="/site.webmanifest">
 
-    <!-- Fonts -->
+    <!-- Preconnect to image sources -->
+    <link rel="preconnect" href="https://images.unsplash.com">
+
+    <!-- Preload Critical Hero Image for LCP -->
+    <link rel="preload" as="image" href="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?q=85&w=2000&auto=format&fit=crop" fetchpriority="high">
+
+    <!-- Google Fonts with optimization -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    </noscript>
 </head>
   <body class="bg-brand-off-white text-brand-black antialiased">
     <div id="root"></div>
