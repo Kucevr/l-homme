@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { m, useScroll, useTransform, useSpring } from 'framer-motion';
 import { useStore } from '../store';
 import { PRODUCTS } from '../data';
 import { Icons, RevealOnScroll, LazyImage, RevealText, CharRevealText } from './ui';
@@ -30,7 +30,7 @@ export const Hero = () => {
         onClick={() => { setView('collections'); window.scrollTo(0, 0); }}
     >
         {/* Full Screen Image with Cinematic Spring Parallax */}
-        <motion.div 
+        <m.div 
             style={{ y, scale, opacity }}
             className="absolute inset-0 w-full h-full will-change-transform"
         >
@@ -46,7 +46,7 @@ export const Hero = () => {
                 fetchPriority="high"
                 decoding="async"
             />
-        </motion.div>
+        </m.div>
         
         {/* Cinematic Overlay Gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>

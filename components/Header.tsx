@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { motion, useAnimation, AnimatePresence } from 'framer-motion';
+import { m, useAnimation, AnimatePresence } from 'framer-motion';
 import { Icons } from './ui';
 import { FullScreenMenu } from './Menu';
 import { PageView } from '../data';
@@ -18,7 +18,7 @@ const RollingNumber = ({ value }: { value: number }) => {
     return (
         <span className="relative inline-block overflow-hidden h-3.5">
             <AnimatePresence mode="popLayout">
-                <motion.span
+                <m.span
                     key={value}
                     initial={{ y: 20, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
@@ -27,7 +27,7 @@ const RollingNumber = ({ value }: { value: number }) => {
                     className="block leading-none"
                 >
                     {value}
-                </motion.span>
+                </m.span>
             </AnimatePresence>
         </span>
     );
@@ -131,18 +131,18 @@ export const Header = ({ cartCount, onOpenCart, onNavigate, onOpenSearch }: Head
               <span className="hidden lg:inline text-xs font-bold uppercase tracking-widest">
                 {translations[language].nav.saved}
               </span>
-              <motion.div animate={wishlistControls} className="relative">
+              <m.div animate={wishlistControls} className="relative">
                 <Icons.Heart />
                 {wishlist.length > 0 && (
-                  <motion.span 
+                  <m.span 
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     className="absolute -top-1 -right-1 bg-black text-white text-[10px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold"
                   >
                     <RollingNumber value={wishlist.length} />
-                  </motion.span>
+                  </m.span>
                 )}
-              </motion.div>
+              </m.div>
             </button>
             <button 
               onClick={onOpenSearch} 
@@ -159,18 +159,18 @@ export const Header = ({ cartCount, onOpenCart, onNavigate, onOpenSearch }: Head
               <span className="hidden lg:inline text-xs font-bold uppercase tracking-widest">
                 {translations[language].nav.cart}
               </span>
-              <motion.div animate={cartControls} className="relative">
+              <m.div animate={cartControls} className="relative">
                 <Icons.ShoppingBag />
                 {cartCount > 0 && (
-                  <motion.span 
+                  <m.span 
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     className="absolute -top-1 -right-1 bg-black text-white text-[10px] w-3.5 h-3.5 rounded-full flex items-center justify-center font-bold"
                   >
                     <RollingNumber value={cartCount} />
-                  </motion.span>
+                  </m.span>
                 )}
-              </motion.div>
+              </m.div>
             </button>
           </div>
 

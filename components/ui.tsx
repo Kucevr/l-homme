@@ -1,5 +1,5 @@
 import * as React from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { m, useScroll, useTransform } from "framer-motion";
 
 interface RevealOnScrollProps {
   children?: React.ReactNode;
@@ -50,11 +50,11 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 
 export const Skeleton = ({ className }: { className?: string }) => (
   <div className={`relative overflow-hidden bg-stone-200 ${className || ''}`}>
-    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-stone-100/50 to-transparent animate-shimmer" />
+    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-stone-100/30 to-transparent animate-shimmer" />
   </div>
 );
 
-export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: string, className?: string }) => {
+export const LazyImage = ({ src, alt, className = "", sizes = "" }: { src: string, alt: string, className?: string, sizes?: string }) => {
   const [isLoaded, setIsLoaded] = React.useState(false);
   
   // Adaptive loading: Choose quality based on connection
@@ -63,19 +63,19 @@ export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: stri
 
   React.useEffect(() => {
     const connection = (navigator as any).connection;
-    let quality = 80;
-    let width = 1200;
+    let quality = 75; 
+    let width = 1200; 
 
     if (connection) {
       if (connection.effectiveType === '4g') {
-        quality = 75; // Reduced from 85 for better mobile delivery
-        width = 1200; // Reduced from 1600
+        quality = 70; // Even tighter for stable results
+        width = 1024;
       } else if (connection.effectiveType === '3g') {
-        quality = 55; // Reduced from 65
-        width = 800;
+        quality = 50; 
+        width = 640;
       } else if (connection.effectiveType === '2g') {
-        quality = 30; // Reduced from 40
-        width = 400;
+        quality = 25; 
+        width = 320;
       }
     }
     
@@ -84,11 +84,10 @@ export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: stri
       const params = src.includes('?') ? src.split('?')[1] : '';
       const separator = src.includes('?') ? '&' : '?';
       
-      // Force webp and optimal compression
       const extraParams = `&auto=format,compress&fm=webp&q=${quality}`;
       setOptimizedSrc(`${base}${separator}${params}${params ? '&' : ''}${extraParams}&w=${width}&fit=crop`);
       
-      const widths = [320, 640, 800, 1024, 1200]; // Tighter mobile-first widths
+      const widths = [320, 640, 800, 1024, 1200, 1600];
       const set = widths.map(w => 
         `${base}?${params}${params ? '&' : ''}${extraParams}&w=${w}&fit=crop ${w}w`
       ).join(', ');
@@ -106,7 +105,7 @@ export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: stri
       <img
         src={optimizedSrc}
         srcSet={srcSet}
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" 
+        sizes={sizes || "(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"} 
         alt={alt}
         loading="lazy"
         onLoad={() => setIsLoaded(true)}
@@ -127,19 +126,19 @@ export const RevealText = ({ children }: { children: string }) => {
   const y = useTransform(scrollYProgress, [0, 1], [40, 0]);
 
   return (
-    <motion.h2 
+    <m.h2 
       ref={ref}
       style={{ opacity, y }}
       className="text-3xl md:text-5xl lg:text-7xl font-light tracking-tight text-center max-w-5xl leading-[1.1] font-serif italic"
     >
       {children}
-    </motion.h2>
+    </m.h2>
   );
 };
 
 const Char = ({ char, progress, range }: any) => {
   const opacity = useTransform(progress, range, [0.1, 1]);
-  return <motion.span style={{ opacity }}>{char}</motion.span>;
+  return <m.span style={{ opacity }}>{char}</m.span>;
 };
 
 export const CharRevealText = ({ text, className = "" }: { text?: string, className?: string }) => {

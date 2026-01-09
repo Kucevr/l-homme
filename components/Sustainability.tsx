@@ -1,6 +1,6 @@
 
 import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { m, useScroll, useTransform } from 'framer-motion';
 import { useStore } from '../store';
 import { translations } from '../translations';
 
@@ -38,7 +38,7 @@ const Sustainability = () => {
         <div ref={containerRef} className="bg-white min-h-screen pt-32 pb-20 overflow-hidden">
             <div className="max-w-[1440px] mx-auto px-6 md:px-12">
                 {/* Hero Section */}
-                <motion.div 
+                <m.div 
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="mb-32 max-w-4xl"
@@ -50,13 +50,13 @@ const Sustainability = () => {
                     <p className="text-xl md:text-2xl text-gray-600 font-light leading-relaxed">
                         {t.heroDescription}
                     </p>
-                </motion.div>
+                </m.div>
 
                 {/* Vertical Timeline/Grid */}
                 <div className="space-y-40">
                     {sections.map((section, idx) => (
                         <div key={idx} className={`flex flex-col ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-12 md:gap-24`}>
-                            <motion.div 
+                            <m.div 
                                 initial={{ opacity: 0, scale: 0.95 }}
                                 whileInView={{ opacity: 1, scale: 1 }}
                                 viewport={{ once: true }}
@@ -68,9 +68,9 @@ const Sustainability = () => {
                                     alt={section.title}
                                     className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
                                 />
-                            </motion.div>
+                            </m.div>
                             
-                            <motion.div 
+                            <m.div 
                                 initial={{ opacity: 0, x: idx % 2 === 0 ? 30 : -30 }}
                                 whileInView={{ opacity: 1, x: 0 }}
                                 viewport={{ once: true }}
@@ -82,13 +82,13 @@ const Sustainability = () => {
                                     {section.content}
                                 </p>
                                 <div className="mt-12 w-20 h-[1px] bg-black"></div>
-                            </motion.div>
+                            </m.div>
                         </div>
                     ))}
                 </div>
 
                 {/* Stats Section */}
-                <motion.div 
+                <m.div 
                     initial={{ opacity: 0 }}
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
@@ -104,7 +104,7 @@ const Sustainability = () => {
                             <div className="text-[10px] uppercase tracking-[0.2em] text-gray-400 font-bold">{stat.label}</div>
                         </div>
                     ))}
-                </motion.div>
+                </m.div>
             </div>
         </div>
     );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { Product, PRODUCTS, PageView, getRecommendedProducts } from '../data';
 import { PRODUCT_DETAILS } from '../data-extended';
 import { Icons, LazyImage, CharRevealText } from './ui';
@@ -30,7 +30,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick, isWi
     >
       <div className="relative w-full aspect-[3/4] overflow-hidden bg-stone-50">
         {/* Base Image */}
-        <motion.div 
+        <m.div 
             layoutId={finalLayoutId}
             className="w-full h-full"
         >
@@ -39,7 +39,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick, isWi
             alt={language === 'ru' && product.name_ru ? product.name_ru : product.name} 
             className="w-full h-full transition-transform duration-700 ease-out group-hover:scale-105"
             />
-        </motion.div>
+        </m.div>
         
         {/* Hover Image */}
         <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
@@ -221,7 +221,7 @@ export const ProductDetail = ({ product }: { product: Product }) => {
       {/* Sticky Mobile CTA */}
       <AnimatePresence>
         {showSticky && (
-          <motion.div 
+          <m.div 
             initial={{ y: 100 }}
             animate={{ y: 0 }}
             exit={{ y: 100 }}
@@ -244,7 +244,7 @@ export const ProductDetail = ({ product }: { product: Product }) => {
             >
               {selectedSize ? t.addToBag : t.selectSize}
             </button>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
@@ -260,12 +260,12 @@ export const ProductDetail = ({ product }: { product: Product }) => {
          <div className="grid grid-cols-1 lg:grid-cols-12 min-h-screen border-t border-gray-200">
              <div className="lg:col-span-8 bg-white border-b lg:border-b-0 lg:border-r border-gray-200">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-gray-200">
-                    <motion.div 
+                    <m.div 
                         layoutId={`product-image-${product.id}`}
                         className="bg-white aspect-[3/4] relative overflow-hidden group"
                     >
                         <LazyImage src={product.image} className="absolute inset-0 w-full h-full transition-transform duration-[2s] group-hover:scale-105" alt={product.name} />
-                    </motion.div>
+                    </m.div>
                     <div className="bg-white aspect-[3/4] relative overflow-hidden group">
                         <LazyImage src={product.imageHover} className="absolute inset-0 w-full h-full transition-transform duration-[2s] group-hover:scale-105" alt={product.name} />
                     </div>
@@ -276,13 +276,13 @@ export const ProductDetail = ({ product }: { product: Product }) => {
              </div>
 
              <div className="lg:col-span-4 relative bg-white">
-                <motion.div 
+                <m.div 
                     variants={containerVariants}
                     initial="hidden"
                     animate="visible"
                     className="lg:sticky lg:top-20 p-8 md:p-10 h-fit flex flex-col gap-8"
                 >
-                    <motion.div variants={itemVariants}>
+                    <m.div variants={itemVariants}>
                         <div className="flex justify-between items-start mb-4">
                             <div className="flex flex-wrap gap-2 items-center">
                                 <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 border border-gray-200 px-2 py-1">{product.category}</span>
@@ -297,9 +297,9 @@ export const ProductDetail = ({ product }: { product: Product }) => {
                         <p className="text-sm text-gray-600 font-light leading-relaxed">
                             {language === 'ru' && product.description_ru ? product.description_ru : product.description}
                         </p>
-                    </motion.div>
+                    </m.div>
 
-                    <motion.div variants={itemVariants} id="size-selector">
+                    <m.div variants={itemVariants} id="size-selector">
                         <div className="flex justify-between items-center mb-3">
                             <span className="text-xs font-bold uppercase tracking-widest">{t.selectSize}</span>
                             <button onClick={() => setShowSizeGuide(true)} className="text-[10px] text-gray-400 underline hover:text-black">{t.sizeGuide}</button>
@@ -315,10 +315,10 @@ export const ProductDetail = ({ product }: { product: Product }) => {
                                 </button>
                             ))}
                         </div>
-                    </motion.div>
+                    </m.div>
 
-                    <motion.div variants={itemVariants} className="flex gap-4">
-                        <motion.button 
+                    <m.div variants={itemVariants} className="flex gap-4">
+                        <m.button 
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={() => {
@@ -331,18 +331,18 @@ export const ProductDetail = ({ product }: { product: Product }) => {
                             className={`flex-1 py-4 text-xs font-bold uppercase tracking-widest border border-black transition-all duration-300 ${selectedSize ? 'bg-black text-white hover:bg-white hover:text-black' : 'bg-gray-50 text-gray-300 border-gray-200 cursor-not-allowed'}`}
                         >
                             {selectedSize ? t.addToBag : t.selectSize}
-                        </motion.button>
-                        <motion.button
+                        </m.button>
+                        <m.button
                             whileHover={{ scale: 1.05, backgroundColor: "#f9f9f9" }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => toggleWishlist(product.id)}
                             className={`w-14 h-14 flex items-center justify-center border border-black transition-colors ${isWishlisted ? 'bg-black text-white hover:bg-black/90' : 'bg-white text-black hover:bg-gray-50'}`}
                         >
                             {isWishlisted ? <Icons.HeartFill /> : <Icons.Heart />}
-                        </motion.button>
-                    </motion.div>
+                        </m.button>
+                    </m.div>
 
-                    <motion.div variants={itemVariants} className="pt-4">
+                    <m.div variants={itemVariants} className="pt-4">
                         <Accordion title={t.detailsFit} defaultOpen={true}>
                             <p className="mb-3"><strong>{t.fit}:</strong> {language === 'ru' && details?.fit_ru ? details.fit_ru : details?.fit}</p>
                             <p className="mb-3"><strong>{t.madeIn}:</strong> {language === 'ru' && details?.madeIn_ru ? details.madeIn_ru : details?.madeIn}</p>
@@ -384,8 +384,8 @@ export const ProductDetail = ({ product }: { product: Product }) => {
                                 </>
                             )}
                         </Accordion>
-                    </motion.div>
-                </motion.div>
+                    </m.div>
+                </m.div>
              </div>
          </div>
          

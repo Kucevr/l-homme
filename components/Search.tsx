@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Icons, LazyImage } from './ui';
 import { PRODUCTS, Product, SEARCHABLE_PAGES, PageLink, PageView } from '../data';
 import { useStore } from '../store';
@@ -151,7 +151,7 @@ export const SearchOverlay = ({ isOpen, onClose, onProductClick }: SearchProps) 
                         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12">
                             {results.map(p => (
                                 <div key={p.id} onClick={() => { onProductClick(p); onClose(); }} className="cursor-pointer group relative">
-                                    <motion.div 
+                                    <m.div 
                                         layoutId={`product-image-${p.id}`}
                                         className="aspect-[3/4] bg-stone-50 overflow-hidden mb-4 relative"
                                     >
@@ -168,7 +168,7 @@ export const SearchOverlay = ({ isOpen, onClose, onProductClick }: SearchProps) 
                                         >
                                             {wishlist.includes(p.id) ? <Icons.HeartFill /> : <Icons.Heart />}
                                         </button>
-                                    </motion.div>
+                                    </m.div>
                                     <div>
                                         <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">{p.category}</p>
                                         <h4 className="font-serif italic text-xl group-hover:text-gray-600 transition-colors">

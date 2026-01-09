@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { m } from 'framer-motion';
 import { Icons } from './ui';
 import { useStore } from '../store';
 import { translations } from '../translations';

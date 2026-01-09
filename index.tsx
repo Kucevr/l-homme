@@ -131,76 +131,77 @@ const App = () => {
   return (
     <HelmetProvider>
       <ErrorBoundary>
-        <div className="min-h-screen font-sans bg-white selection:bg-black selection:text-white relative overflow-x-hidden">
-          {/* Dynamic Film Grain Texture Overlay */}
-        <motion.div 
-            style={{ opacity: grainOpacity }}
-            className="fixed inset-0 z-[100] pointer-events-none mix-blend-multiply"
-        >
-          <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-            <filter id="noiseFilter">
-              <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-            </filter>
-            <rect width="100%" height="100%" filter="url(#noiseFilter)" />
-          </svg>
-        </motion.div>
+        <LazyMotion features={domMax} strict>
+          <div className="min-h-screen font-sans bg-white selection:bg-black selection:text-white relative overflow-x-hidden">
+            {/* Dynamic Film Grain Texture Overlay */}
+          <m.div 
+              style={{ opacity: grainOpacity }}
+              className="fixed inset-0 z-[100] pointer-events-none mix-blend-multiply"
+          >
+            <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+              <filter id="noiseFilter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+              </filter>
+              <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+            </svg>
+          </m.div>
 
-        {/* Dynamic Vignette during scroll */}
-        <motion.div 
-            style={{ backdropFilter: `blur(${vignetteBlur}px)` }}
-            className="fixed inset-0 z-[99] pointer-events-none transition-all duration-300"
-        />
+          {/* Dynamic Vignette during scroll */}
+          <m.div 
+              style={{ backdropFilter: `blur(${vignetteBlur}px)` }}
+              className="fixed inset-0 z-[99] pointer-events-none transition-all duration-300"
+          />
 
-        <Helmet>
-          <title>L'HOMME | Modern Atelier</title>
-          <meta name="description" content="Redefining the boundaries between formal tailoring and casual utility." />
-        </Helmet>
+          <Helmet>
+            <title>L'HOMME | Modern Atelier</title>
+            <meta name="description" content="Redefining the boundaries between formal tailoring and casual utility." />
+          </Helmet>
 
-        <Marquee />
-        <Header 
-          cartCount={cart.reduce((a, b) => a + b.quantity, 0)} 
-          onOpenCart={() => setIsCartOpen(true)}
-          onNavigate={handleNavigate}
-          onOpenSearch={() => setIsSearchOpen(true)}
-        />
-        
-        <main>
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={view + (activeProduct?.id || "")}
-                initial={{ opacity: 0, clipPath: "inset(10% 0 10% 0)", filter: "blur(10px)" }}
-                animate={{ opacity: 1, clipPath: "inset(0% 0 0% 0)", filter: "blur(0px)" }}
-                exit={{ opacity: 0, clipPath: "inset(10% 0 10% 0)", filter: "blur(10px)" }}
-                transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                className="w-full"
-              >
-                <Suspense fallback={
-                  <div className="h-screen flex items-center justify-center bg-white">
-                    <div className="flex flex-col items-center gap-4">
-                      <div className="w-12 h-px bg-black animate-pulse" />
-                      <span className="text-[10px] uppercase tracking-[0.3em] font-medium pulse">L'HOMME</span>
+          <Marquee />
+          <Header 
+            cartCount={cart.reduce((a, b) => a + b.quantity, 0)} 
+            onOpenCart={() => setIsCartOpen(true)}
+            onNavigate={handleNavigate}
+            onOpenSearch={() => setIsSearchOpen(true)}
+          />
+          
+          <main>
+              <AnimatePresence mode="wait">
+                <m.div
+                  key={view + (activeProduct?.id || "")}
+                  initial={{ opacity: 0, clipPath: "inset(10% 0 10% 0)", filter: "blur(10px)" }}
+                  animate={{ opacity: 1, clipPath: "inset(0% 0 0% 0)", filter: "blur(0px)" }}
+                  exit={{ opacity: 0, clipPath: "inset(10% 0 10% 0)", filter: "blur(10px)" }}
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  className="w-full"
+                >
+                  <Suspense fallback={
+                    <div className="h-screen flex items-center justify-center bg-white">
+                      <div className="flex flex-col items-center gap-4">
+                        <div className="w-12 h-px bg-black animate-pulse" />
+                        <span className="text-[10px] uppercase tracking-[0.3em] font-medium pulse">L'HOMME</span>
+                      </div>
                     </div>
-                  </div>
-                }>
-                    {view === "home" && <HomeView />}
-                    {view === "collections" && <Shop />}
-                    {view === "new-arrivals" && <NewArrivals />}
-                    {view === "product" && activeProduct && (
-                      <ProductDetail product={activeProduct} />
-                    )}
-                    {view === "locations" && <Locations />}
-                    {view === "journal" && <Journal />}
-                    {view === "shipping" && <Shipping />}
-                    {view === "returns" && <Returns />}
-                    {view === "contact" && <Contact />}
-                    {view === "privacy" && <PrivacyPolicy />}
-                    {view === "terms" && <TermsOfService />}
-                    {view === "philosophy" && <Philosophy />}
-                    {view === "sustainability" && <Sustainability />}
-                </Suspense>
-              </motion.div>
-            </AnimatePresence>
-        </main>
+                  }>
+                      {view === "home" && <HomeView />}
+                      {view === "collections" && <Shop />}
+                      {view === "new-arrivals" && <NewArrivals />}
+                      {view === "product" && activeProduct && (
+                        <ProductDetail product={activeProduct} />
+                      )}
+                      {view === "locations" && <Locations />}
+                      {view === "journal" && <Journal />}
+                      {view === "shipping" && <Shipping />}
+                      {view === "returns" && <Returns />}
+                      {view === "contact" && <Contact />}
+                      {view === "privacy" && <PrivacyPolicy />}
+                      {view === "terms" && <TermsOfService />}
+                      {view === "philosophy" && <Philosophy />}
+                      {view === "sustainability" && <Sustainability />}
+                  </Suspense>
+                </m.div>
+              </AnimatePresence>
+          </main>
 
         <Suspense fallback={<div className="h-40 bg-black" />}>
            <Footer />
@@ -265,7 +266,8 @@ const App = () => {
             <NewsletterModal />
             <WishlistOverlay />
         </Suspense>
-      </div>
+        </div>
+       </LazyMotion>
      </ErrorBoundary>
     </HelmetProvider>
   );

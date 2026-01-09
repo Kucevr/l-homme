@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { m, AnimatePresence } from 'framer-motion';
 import { useStore } from '../store';
 import { PRODUCTS } from '../data';
 import { Icons, LazyImage } from './ui';
@@ -15,14 +15,14 @@ export const WishlistOverlay = () => {
     <AnimatePresence>
       {isWishlistOpen && (
         <div className="fixed inset-0 z-[70] flex justify-end">
-          <motion.div 
+          <m.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsWishlistOpen(false)}
             className="absolute inset-0 bg-black/40 backdrop-blur-sm"
           />
-          <motion.div 
+          <m.div 
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
@@ -60,13 +60,13 @@ export const WishlistOverlay = () => {
                 <div className="space-y-8">
                   {wishlistedProducts.map(p => (
                     <div key={p.id} className="flex gap-6 group">
-                      <motion.div 
+                      <m.div 
                         layoutId={`product-image-${p.id}`}
                         className="w-24 aspect-[3/4] bg-stone-50 overflow-hidden cursor-pointer"
                         onClick={() => { setActiveProduct(p); setView('product'); setIsWishlistOpen(false); window.scrollTo(0, 0); }}
                       >
                         <LazyImage src={p.image} alt={language === 'ru' && p.name_ru ? p.name_ru : p.name} className="group-hover:scale-110 transition-transform duration-700" />
-                      </motion.div>
+                      </m.div>
                       <div className="flex-1">
                         <div className="flex justify-between items-start">
                           <div>
@@ -98,7 +98,7 @@ export const WishlistOverlay = () => {
                 </div>
               )}
             </div>
-          </motion.div>
+          </m.div>
         </div>
       )}
     </AnimatePresence>
