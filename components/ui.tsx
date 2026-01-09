@@ -68,13 +68,13 @@ export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: stri
 
     if (connection) {
       if (connection.effectiveType === '4g') {
-        quality = 85;
-        width = 1600;
+        quality = 75; // Reduced from 85 for better mobile delivery
+        width = 1200; // Reduced from 1600
       } else if (connection.effectiveType === '3g') {
-        quality = 65;
+        quality = 55; // Reduced from 65
         width = 800;
       } else if (connection.effectiveType === '2g') {
-        quality = 40;
+        quality = 30; // Reduced from 40
         width = 400;
       }
     }
@@ -84,11 +84,13 @@ export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: stri
       const params = src.includes('?') ? src.split('?')[1] : '';
       const separator = src.includes('?') ? '&' : '?';
       
-      setOptimizedSrc(`${src}${separator}q=${quality}&w=${width}&auto=format&fit=crop`);
+      // Force webp and optimal compression
+      const extraParams = `&auto=format,compress&fm=webp&q=${quality}`;
+      setOptimizedSrc(`${base}${separator}${params}${params ? '&' : ''}${extraParams}&w=${width}&fit=crop`);
       
-      const widths = [400, 800, 1200, 1600, 2000];
+      const widths = [320, 640, 800, 1024, 1200]; // Tighter mobile-first widths
       const set = widths.map(w => 
-        `${base}?${params}${params ? '&' : ''}q=${quality}&w=${w}&auto=format&fit=crop ${w}w`
+        `${base}?${params}${params ? '&' : ''}${extraParams}&w=${w}&fit=crop ${w}w`
       ).join(', ');
       setSrcSet(set);
     }
@@ -104,7 +106,7 @@ export const LazyImage = ({ src, alt, className = "" }: { src: string, alt: stri
       <img
         src={optimizedSrc}
         srcSet={srcSet}
-        sizes={className.includes('w-') ? '30vw' : '100vw'} 
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" 
         alt={alt}
         loading="lazy"
         onLoad={() => setIsLoaded(true)}
