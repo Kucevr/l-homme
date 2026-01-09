@@ -1,7 +1,7 @@
 import React, { useState, lazy, Suspense, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { HelmetProvider, Helmet } from "react-helmet-async";
-import { AnimatePresence, motion, useScroll, useVelocity, useTransform, useSpring } from "framer-motion";
+import { AnimatePresence, motion, useScroll, useVelocity, useTransform, useSpring, LazyMotion, domMax, m } from "framer-motion";
 
 import "./index.css";
 import { PRODUCTS } from "./data";

@@ -35,15 +35,16 @@ export const Hero = () => {
             className="absolute inset-0 w-full h-full will-change-transform"
         >
             <img 
-                src="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?q=85&w=2000&auto=format&fit=crop" 
-                srcSet="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?q=85&w=600&auto=format&fit=crop 600w,
-                        https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?q=85&w=1200&auto=format&fit=crop 1200w,
-                        https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?q=85&w=2000&auto=format&fit=crop 2000w"
+                src="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?auto=format,compress&fm=webp&q=70&w=1200&fit=crop" 
+                srcSet="https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?auto=format,compress&fm=webp&q=60&w=640&fit=crop 640w,
+                        https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?auto=format,compress&fm=webp&q=70&w=1200&fit=crop 1200w,
+                        https://images.unsplash.com/photo-1490578474895-699cd4e2cf59?auto=format,compress&fm=webp&q=80&w=2000&fit=crop 2000w"
                 sizes="100vw"
                 alt="L'HOMME Autumn/Winter 26 Campaign - Modern Tailoring" 
                 className="w-full h-full object-cover origin-center"
                 loading="eager"
                 fetchPriority="high"
+                decoding="async"
             />
         </motion.div>
         
