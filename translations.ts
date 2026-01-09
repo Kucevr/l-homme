@@ -95,6 +95,21 @@ export const translations = {
       orderDesc: "Thank you for your purchase. You will receive a confirmation email shortly.",
       returnHome: "Return Home"
     },
+    checkout: {
+      title: "Checkout",
+      firstName: "First Name",
+      lastName: "Last Name",
+      email: "Email Address",
+      address: "Shipping Address",
+      city: "City",
+      phone: "Phone Number",
+      completeOrder: "Complete Order",
+      backToCart: "Back to Bag",
+      summary: "Order Summary",
+      shipping: "Shipping",
+      total: "Total",
+      free: "Free"
+    },
     footer: {
       about: "A modern atelier dedicated to the pursuit of silence in design. Crafted for the contemporary creative who values form, function, and longevity.",
       atelier: "Atelier",
@@ -249,6 +264,21 @@ export const translations = {
       orderSuccess: "Заказ успешно оформлен",
       orderDesc: "Благодарим за покупку. Вы получите письмо с подтверждением в ближайшее время.",
       returnHome: "На главную"
+    },
+    checkout: {
+      title: "Оформление заказа",
+      firstName: "Имя",
+      lastName: "Фамилия",
+      email: "Электронная почта",
+      address: "Адрес доставки",
+      city: "Город",
+      phone: "Номер телефона",
+      completeOrder: "Завершить заказ",
+      backToCart: "Назад в корзину",
+      summary: "Детали заказа",
+      shipping: "Доставка",
+      total: "Итого",
+      free: "Бесплатно"
     },
     footer: {
       about: "Современное ателье, посвященное поиску тишины в дизайне. Создано для современного творческого человека, ценящего форму, функциональность и долговечность.",

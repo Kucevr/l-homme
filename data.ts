@@ -1,5 +1,5 @@
 
-export type PageView = 'home' | 'collections' | 'new-arrivals' | 'product' | 'journal' | 'locations' | 'stores' | 'shipping' | 'returns' | 'contact' | 'privacy' | 'terms' | 'philosophy' | 'sustainability' | 'checkout-success';
+export type PageView = 'home' | 'collections' | 'new-arrivals' | 'product' | 'journal' | 'locations' | 'stores' | 'shipping' | 'returns' | 'contact' | 'privacy' | 'terms' | 'philosophy' | 'sustainability' | 'checkout' | 'checkout-success';
 export type CategoryType = 'All' | 'Outerwear' | 'Knitwear' | 'Shirting' | 'Trousers' | 'Footwear' | 'Essentials' | 'Tailoring' | 'Leather Goods' | 'Fragrance' | 'Accessories';
 
 export interface Product {
